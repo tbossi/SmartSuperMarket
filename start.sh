@@ -48,7 +48,7 @@ fi
 
 
 alert "Building container"
-cd SRC_DIR
+cd $SRC_DIR
 docker build -t $APP_NAME .
 cd ..
 
