@@ -7,5 +7,5 @@ RUN npm install
 
 COPY . .
 
-CMD npm rebuild node-sass && npm start
+CMD npm install && npm rebuild node-sass && npm start
 
