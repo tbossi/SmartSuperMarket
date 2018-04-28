@@ -8,20 +8,21 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+
 const publicDir = path.join(__dirname, 'public');
 const viewDir = path.join(__dirname, 'views');
 
 class smartSupermarket {
-    get expressApp() {
-        return this.app;
-    }
-
-    constructor(port) {
+    constructor() {
         this.app = express();
-        this.app.set('port', port);
         this.setViewEngine();
         this.setOthers();
         this.setRoutes();
+    }
+
+    toExpressApp(port) {
+        this.app.set('port', port);
+        return this.app;
     }
 
     setViewEngine() {

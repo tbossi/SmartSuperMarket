@@ -1,68 +1,19 @@
 #!/usr/bin/env node
 'use strict';
-const debug = require('debug')('code:server');
-const http = require('http');
-const SmartSupermarket = require('../smart-supermarket');
+const httpServer = require('../servers/http-server');
+const tcpServer = require('../servers/tcp-server');
 
-class server {
-    constructor(port) {
-        this.port = server.normalizePort(port);
-
-        const smartSupermarketApp = new SmartSupermarket(this.port);
-        this.httpServer = http.createServer(smartSupermarketApp.expressApp);
+class serverContainer {
+    constructor(...servers) {
+        this.servers = servers;
     }
 
     start() {
-        this.httpServer.listen(this.port);
-        this.httpServer.on('error', error => this.onError(error));
-        this.httpServer.on('listening', () => this.onListening());
-
-        console.log(`Server started on port ${this.port}`);
-    }
-
-    onListening() {
-        let addr = this.httpServer.address();
-        let bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-        debug('Listening on ' + bind);
-    }
-
-    onError(error) {
-        if (error.syscall !== 'listen') {
-            throw error;
-        }
-
-        let bind = typeof this.port === 'string' ? `Pipe ${this.port}` : `Port ${this.port}`;
-
-        // handle specific listen errors with friendly messages
-        switch (error.code) {
-            case 'EACCES':
-                console.error(`${bind} requires elevated privileges`);
-                process.exit(1);
-                break;
-            case 'EADDRINUSE':
-                console.error(`${bind} is already in use`);
-                process.exit(1);
-                break;
-            default:
-                throw error;
-        }
-    }
-
-    static normalizePort(val) {
-        let port = parseInt(val, 10);
-
-        if (isNaN(port)) {
-            // named pipe
-            return val;
-        }
-
-        if (port >= 0) {
-            // port number
-            return port;
-        }
-
-        return false;
+        this.servers.forEach(s => s.start());
     }
 }
 
-new server(process.env.PORT || '3000').start();
+new serverContainer(
+    new httpServer(process.env.PORT || '3000'),
+    new tcpServer(9090)
+).start();
