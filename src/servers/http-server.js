@@ -3,14 +3,11 @@ const server = require('./server');
 const http = require('http');
 const debug = require('debug')('code:server');
 
-const SmartSupermarket = require('../smart-supermarket');
-
 class httpServer extends server {
-    constructor(port) {
+    constructor(port, app) {
         super(port);
 
-        const smartSupermarketApp = new SmartSupermarket();
-        this.httpServer = http.createServer(smartSupermarketApp.toExpressApp(this.port));
+        this.httpServer = http.createServer(app.toExpressApp(this.port));
     }
 
     start() {

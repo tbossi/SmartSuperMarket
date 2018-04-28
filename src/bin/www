@@ -3,6 +3,9 @@
 const httpServer = require('../servers/http-server');
 const tcpServer = require('../servers/tcp-server');
 
+const ioDevice = require('../devices/io-device');
+const smartSupermarket = require('../smart-supermarket');
+
 class serverContainer {
     constructor(...servers) {
         this.servers = servers;
@@ -13,7 +16,11 @@ class serverContainer {
     }
 }
 
+const device1 = new ioDevice();
+
+const smartSupermarketApp = new smartSupermarket(device1);
+
 new serverContainer(
-    new httpServer(process.env.PORT || '3000'),
-    new tcpServer(9090)
+    new httpServer(process.env.PORT || '3000', smartSupermarketApp),
+    new tcpServer(9090, device1)
 ).start();

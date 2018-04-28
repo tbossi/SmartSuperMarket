@@ -13,29 +13,30 @@ const publicDir = path.join(__dirname, 'public');
 const viewDir = path.join(__dirname, 'views');
 
 class smartSupermarket {
-    constructor() {
-        this.app = express();
-        this.setViewEngine();
-        this.setOthers();
-        this.setRoutes();
+    constructor(...devices) {
+        this.devices = devices;
     }
 
     toExpressApp(port) {
-        this.app.set('port', port);
-        return this.app;
+        let app = express();
+        this.setViewEngine(app);
+        this.setOthers(app);
+        this.setRoutes(app);
+        app.set('port', port);
+        return app;
     }
 
-    setViewEngine() {
-        this.app.set('views', viewDir);
-        this.app.set('view engine', 'pug');
+    setViewEngine(app) {
+        app.set('views', viewDir);
+        app.set('view engine', 'pug');
     }
 
-    setOthers() {
-        this.app.use(logger('dev'));
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(cookieParser());
-        this.app.use(sassMiddleware({
+    setOthers(app) {
+        app.use(logger('dev'));
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: false }));
+        app.use(cookieParser());
+        app.use(sassMiddleware({
             src: publicDir,
             dest: publicDir,
             indentedSyntax: false, // true = .sass and false = .scss
@@ -43,17 +44,18 @@ class smartSupermarket {
         }));
     }
 
-    setRoutes() {
-        this.app.use(express.static(publicDir));
+    setRoutes(app) {
+        app.use(express.static(publicDir));
 
-        this.app.use('/', indexRouter);
-        this.app.use('/users', usersRouter);
+        //todo pass this.devices to some controller
+        app.use('/', indexRouter);
+        app.use('/users', usersRouter);
 
-        this.app.use(function(req, res, next) {
+        app.use(function(req, res, next) {
             next(createError(404));
         });
 
-        this.app.use(function(err, req, res, next) {
+        app.use(function(err, req, res, next) {
             // set locals, only providing error in development
             res.locals.message = err.message;
             res.locals.error = req.app.get('env') === 'development' ? err : {};
