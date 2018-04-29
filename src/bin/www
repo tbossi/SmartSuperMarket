@@ -4,6 +4,8 @@ const httpServer = require('../servers/http-server');
 const tcpServer = require('../servers/tcp-server');
 
 const ioDevice = require('../devices/io-device');
+const digitalDevice = require('../devices/digital-device');
+const analogicalDevice = require('../devices/analogical-device');
 const smartSupermarket = require('../smart-supermarket');
 
 class serverContainer {
@@ -17,6 +19,8 @@ class serverContainer {
 }
 
 const device1 = new ioDevice();
+device1.addDevice(0, new digitalDevice("sensor1", false));
+device1.addDevice(1, new analogicalDevice("asd", 15.06));
 
 const smartSupermarketApp = new smartSupermarket(device1);
 
