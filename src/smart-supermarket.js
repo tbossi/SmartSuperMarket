@@ -7,7 +7,7 @@ const createError = require('http-errors');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const devicesRouter = require('./routes/devices');
 
 const publicDir = path.join(__dirname, 'public');
 const viewDir = path.join(__dirname, 'views');
@@ -47,9 +47,8 @@ class smartSupermarket {
     setRoutes(app) {
         app.use(express.static(publicDir));
 
-        //todo pass this.devices to some controller
         app.use('/', indexRouter);
-        app.use('/users', usersRouter);
+        app.use('/devices', devicesRouter);
 
         app.use(function(req, res, next) {
             next(createError(404));
@@ -64,6 +63,22 @@ class smartSupermarket {
             res.status(err.status || 500);
             res.render('error');
         });
+    }
+
+    onWebSocketConnection(socket) {
+        var UPDATED_STATUS = "updatedStatus";
+        this.onDevicesUpdates(deviceName => deviceId => newValue => {
+            let result = {
+                device: deviceName,
+                sensor: deviceId,
+                value: newValue
+            };
+            socket.emit(UPDATED_STATUS, result);
+        });
+    }
+
+    onDevicesUpdates(tricallback) {
+        this.devices.forEach(d => d.onDevicesStatusChange(tricallback(d.name)))
     }
 }
 

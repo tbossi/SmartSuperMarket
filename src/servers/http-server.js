@@ -1,19 +1,22 @@
 'use strict';
 const server = require('./server');
 const http = require('http');
+const socketio = require('socket.io');
 const debug = require('debug')('code:server');
 
 class httpServer extends server {
     constructor(port, app) {
         super(port);
-
-        this.httpServer = http.createServer(app.toExpressApp(this.port));
+        this.app = app;
+        this.httpServer = http.createServer(this.app.toExpressApp(this.port));
+        this.webSocket = socketio(this.httpServer);
     }
 
     start() {
         this.httpServer.listen(this.port);
         this.httpServer.on('error', error => this.onError(error));
         this.httpServer.on('listening', () => this.onListening());
+        this.webSocket.on('connection', socket => this.app.onWebSocketConnection(socket));
 
         console.log(`Server started on port ${this.port}`);
     }

@@ -18,6 +18,14 @@ class ioDevice {
         this.devices[id] = device;
     }
 
+    onDeviceStatusChange(id, callback) {
+        this.devices[id].onValueChange(callback);
+    }
+
+    onDevicesStatusChange(bicallback) {
+        Object.keys(this.devices).forEach(k => this.onDeviceStatusChange(k, bicallback(this.devices[k].name)));
+    }
+
     onMessage(message) {
         try {
             let command = ioDevice.convertMessageToCommand(message);

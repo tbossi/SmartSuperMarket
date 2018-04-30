@@ -1,0 +1,9 @@
+extends layout
+
+block append scripts
+    script(src='/socket.io/socket.io.js')
+    script(src='/scripts/device-updater.js')
+
+block content
+    h1= title
+    div(class='devices-container')
