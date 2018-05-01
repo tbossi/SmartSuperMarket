@@ -7,18 +7,18 @@ class device {
 
     set value(x) {
         this._value = this.parseValue(x);
-        this.callbacks.forEach(c => c(this.value));
+        this.onValueChangeCallbacks.forEach(c => c(this.value));
     }
 
     constructor(name, defaultValue) {
         this.name = name;
-        this.callbacks = [];
+        this.onValueChangeCallbacks = [];
 
         this.value = defaultValue;
     }
 
     onValueChange(callback) {
-        this.callbacks.push(callback);
+        this.onValueChangeCallbacks.push(callback);
     }
 
     parseValue(value) {
