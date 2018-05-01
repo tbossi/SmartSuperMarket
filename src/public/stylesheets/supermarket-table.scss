@@ -1,0 +1,40 @@
+.supermarket-table {
+  width: 600px;
+  heigth: 600px;
+  display: grid;
+  grid-column-gap: .5vw;
+  grid-row-gap: .5vw;
+  padding-left: 0;
+}
+
+.supermarket-table:before {
+  display: block;
+  content: '';
+  grid-row: 9;
+  grid-column: 8;
+}
+
+.supermarket-table > li {
+  width: 65px;
+  height: 65px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  background: #FF0A0050;
+  font-weight: bold;
+}
+
+.supermarket-table > li abbr {
+  font-weight: lighter;
+  font-size: 2.5vw;
+}
+
+.supermarket-table .fridge {
+  background: #a3c7d2;
+}
+
+.supermarket-table .shelf {
+  background: #a1d24b;
+}

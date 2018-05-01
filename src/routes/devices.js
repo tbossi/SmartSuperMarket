@@ -9,7 +9,14 @@ function router(devices) {
         res.header('Pragma','no-cache');
         res.render('devices', {
             title: 'Devices status',
-            devices: devices.map(d => d.devicesValues)
+            devices: devices.map(d => d.devicesValues),
+            hitmap: [
+                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
+                ['F', 'N', 'N', 'S', 'S', 'N', 'N', 'S'],
+                ['F', 'N', 'N', 'S', 'S', 'N', 'N', 'S'],
+                ['F', 'N', 'N', 'S', 'S', 'N', 'N', 'S'],
+                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N']
+            ]
         });
     });
 

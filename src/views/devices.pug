@@ -3,6 +3,7 @@ extends layout
 block append scripts
     script(src='/socket.io/socket.io.js')
     script(src='/scripts/device-updater.js')
+    link(rel='stylesheet', href='/stylesheets/supermarket-table.css')
 
 block content
     h1= title
@@ -14,3 +15,16 @@ block content
                     each sensor in device.sensors
                         div(class='sensor', id=sensor.id)
                             p #{sensor.name} (ID: #{sensor.id}) #[span(class=sensor.result.type) #{sensor.result.value}]
+    h1='Supermarket status'
+    ol(class='supermarket-table')
+        each line in hitmap
+            each elem in line
+                if elem === 'F'
+                    li(class='fridge')
+                        abb #{elem}
+                else if elem === 'S'
+                    li(class='shelf')
+                        abb #{elem}
+                else
+                    li
+                        abb
