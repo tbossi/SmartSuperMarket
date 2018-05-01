@@ -19,7 +19,7 @@ class RFIDDevice extends device {
         return parsed;
     }
 
-    set active(state) {
+    set active(state) { // bisogna ricordarsi di non fare più set value dopo averlo disattivato
         this._active = state;
         if (!this._active) {
             this.value = '';
