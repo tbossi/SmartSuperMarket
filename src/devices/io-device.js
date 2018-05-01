@@ -5,6 +5,24 @@ const GET = 1;
 const SET = 2;
 
 class ioDevice {
+    get devicesValues() {
+        return {
+            name: this.name,
+            sensors: Object.keys(this.devices).map(k => {
+                let sensorName = this.devices[k].name;
+                let sensorValue = this.devices[k].value;
+                return {
+                    id: k,
+                    name: sensorName,
+                    result: {
+                        value: sensorValue,
+                        type: typeof sensorValue
+                    }
+                };
+            })
+        };
+    }
+
     constructor(name) {
         this.name = name;
         this.devices = {};
@@ -23,7 +41,7 @@ class ioDevice {
     }
 
     onDevicesStatusChange(bicallback) {
-        Object.keys(this.devices).forEach(k => this.onDeviceStatusChange(k, bicallback(this.devices[k].name)));
+        Object.keys(this.devices).forEach(k => this.onDeviceStatusChange(k, bicallback(k, this.devices[k].name)));
     }
 
     onMessage(message) {
@@ -58,7 +76,7 @@ class ioDevice {
                 ensureDeviceExists(command.device, this.devices);
                 this.devices[command.device].value = command.value;
                 result.device = command.device;
-                result.value = command.value;
+                result.value = this.devices[command.device].value;
                 break;
         }
         return result;

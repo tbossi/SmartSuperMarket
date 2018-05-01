@@ -18,7 +18,7 @@ class serverContainer {
     }
 }
 
-const device1 = new ioDevice("device#1");
+const device1 = new ioDevice("device_1");
 device1.addDevice(0, new digitalDevice("sensor1", false));
 device1.addDevice(1, new analogicalDevice("asd", 15.06));
 

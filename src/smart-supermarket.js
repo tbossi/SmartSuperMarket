@@ -12,6 +12,8 @@ const devicesRouter = require('./routes/devices');
 const publicDir = path.join(__dirname, 'public');
 const viewDir = path.join(__dirname, 'views');
 
+const UPDATED_STATUS = "updatedStatus";
+
 class smartSupermarket {
     constructor(...devices) {
         this.devices = devices;
@@ -29,12 +31,13 @@ class smartSupermarket {
     setViewEngine(app) {
         app.set('views', viewDir);
         app.set('view engine', 'pug');
+        app.set('view cache', false);
     }
 
     setOthers(app) {
         app.use(logger('dev'));
         app.use(express.json());
-        app.use(express.urlencoded({ extended: false }));
+        app.use(express.urlencoded({extended: false}));
         app.use(cookieParser());
         app.use(sassMiddleware({
             src: publicDir,
@@ -48,13 +51,13 @@ class smartSupermarket {
         app.use(express.static(publicDir));
 
         app.use('/', indexRouter);
-        app.use('/devices', devicesRouter);
+        app.use('/devices', devicesRouter(this.devices));
 
-        app.use(function(req, res, next) {
+        app.use((req, res, next) => {
             next(createError(404));
         });
 
-        app.use(function(err, req, res, next) {
+        app.use((err, req, res, next) => {
             // set locals, only providing error in development
             res.locals.message = err.message;
             res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -66,12 +69,21 @@ class smartSupermarket {
     }
 
     onWebSocketConnection(socket) {
-        var UPDATED_STATUS = "updatedStatus";
-        this.onDevicesUpdates(deviceName => deviceId => newValue => {
+        this.onDevicesUpdates(deviceName => (sensorId, sensorName) => newValue => {
             let result = {
-                device: deviceName,
-                sensor: deviceId,
-                value: newValue
+                device: {
+                    name: deviceName,
+                    sensors: [
+                        {
+                            id: sensorId,
+                            name: sensorName,
+                            result: {
+                                value: newValue,
+                                type: typeof newValue
+                            }
+                        },
+                    ],
+                }
             };
             socket.emit(UPDATED_STATUS, result);
         });

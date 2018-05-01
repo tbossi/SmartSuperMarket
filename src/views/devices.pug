@@ -7,3 +7,10 @@ block append scripts
 block content
     h1= title
     div(class='devices-container')
+        each device in devices
+            div(class='device', id=device.name)
+                h3= device.name
+                div(class='sensors')
+                    each sensor in device.sensors
+                        div(class='sensor', id=sensor.id)
+                            p #{sensor.name} (ID: #{sensor.id}) #[span(class=sensor.result.type) #{sensor.result.value}]
