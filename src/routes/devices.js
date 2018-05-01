@@ -10,7 +10,7 @@ function router(devices) {
         res.render('devices', {
             title: 'Devices status',
             devices: devices.map(d => d.devicesValues),
-            hitmap: [
+            heatmap: [
                 ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
                 ['F', 'N', 'N', 'S', 'S', 'N', 'N', 'S'],
                 ['F', 'N', 'N', 'S', 'S', 'N', 'N', 'S'],

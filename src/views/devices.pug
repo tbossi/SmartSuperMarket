@@ -17,7 +17,7 @@ block content
                             p #{sensor.name} (ID: #{sensor.id}) #[span(class=sensor.result.type) #{sensor.result.value}]
     h1='Supermarket status'
     ol(class='supermarket-table')
-        each line in hitmap
+        each line in heatmap
             each elem in line
                 if elem === 'F'
                     li(class='fridge')
