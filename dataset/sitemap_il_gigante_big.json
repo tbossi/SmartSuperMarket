@@ -1,0 +1,50 @@
+{
+  "_id": "ilgigantebig",
+  "startUrl": [
+    "https://www.cosicomodo.it/ilgigante/varallo-pombia/pages/tutte-le-categorie"
+  ],
+  "selectors": [
+    {
+      "id": "reparto",
+      "type": "SelectorLink",
+      "selector": "ul.list a",
+      "parentSelectors": [
+        "_root"
+      ],
+      "multiple": true,
+      "delay": 0
+    },
+    {
+      "id": "element",
+      "type": "SelectorElement",
+      "selector": "div.figcaption",
+      "parentSelectors": [
+        "reparto"
+      ],
+      "multiple": true,
+      "delay": 0
+    },
+    {
+      "id": "title",
+      "type": "SelectorText",
+      "selector": "h3.name a",
+      "parentSelectors": [
+        "element"
+      ],
+      "multiple": false,
+      "regex": "",
+      "delay": 0
+    },
+    {
+      "id": "price",
+      "type": "SelectorText",
+      "selector": "strong.current",
+      "parentSelectors": [
+        "element"
+      ],
+      "multiple": false,
+      "regex": "",
+      "delay": 0
+    }
+  ]
+}
