@@ -1,11 +1,11 @@
-var mocha = require('mocha')
-var describe = mocha.describe
-var it = mocha.it
-var assert = require('chai').assert
+const mocha = require('mocha');
+const describe = mocha.describe;
+const it = mocha.it;
+const assert = require('chai').assert;
 
 describe('rfid', function () {
     const rfidDevice = require('../devices/rfid-device');
-    var rfid = new rfidDevice("#rfid", 1234);
+    let rfid = new rfidDevice("#rfid", 1234);
 
     it('get correct value after creation', function () {
         assert.equal(1234, rfid.value);
