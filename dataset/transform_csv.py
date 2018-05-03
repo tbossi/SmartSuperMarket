@@ -28,7 +28,7 @@ for index, row in df.iterrows():
     price_str = row['price']
     num = re.findall("\d+\,\d+", str(price_str))
     if (len(num) != 0):
-        correct_price.append(num[0])
+        correct_price.append(float(re.sub(',', '.', num[0])))
     else:
         correct_price.append('')
 # print(correct_price)    
