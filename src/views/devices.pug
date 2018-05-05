@@ -14,7 +14,7 @@ block content
                 div(class='sensors')
                     each sensor in device.sensors
                         div(class='sensor', id=sensor.id)
-                            p #{sensor.name} (ID: #{sensor.id}) #[span(class=sensor.result.type) #{sensor.result.value}]
+                            p [ID: #{sensor.id}] #{sensor.name}: #[span(class=sensor.result.type) #{sensor.result.value}]
     h1='Supermarket status'
     ol(class='supermarket-table')
         each line in heatmap

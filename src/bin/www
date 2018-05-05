@@ -18,13 +18,16 @@ class serverContainer {
     }
 }
 
-const device1 = new ioDevice("device_1");
-device1.addDevice(0, new digitalDevice("sensor1", false));
-device1.addDevice(1, new analogicalDevice("asd", 15.06));
+const shelves = new ioDevice("Shelves");
+shelves.addDevice("S1_Temp", new analogicalDevice("Shelf 1 temperature", 4.0));
+for (let i = 1; i < 6; i++) {
+    shelves.addDevice(`S${i}_Add`, new analogicalDevice(`Shelf ${i} added product id`, 0));
+    shelves.addDevice(`S${i}_Rem`, new analogicalDevice(`Shelf ${i} removed product id`, 0));
+}
 
-const smartSupermarketApp = new smartSupermarket(device1);
+const smartSupermarketApp = new smartSupermarket(shelves);
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
-    new tcpServer(9090, device1)
+    new tcpServer(9090, shelves)
 ).start();
