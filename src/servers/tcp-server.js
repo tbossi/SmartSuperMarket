@@ -19,7 +19,8 @@ class tcpServer extends server {
     }
 
     start() {
-        this.server.listen(this.port, '127.0.0.1')
+        //0.0.0.0 allows connections from outside of the docker container!
+        this.server.listen(this.port, '0.0.0.0');
     }
 }
 

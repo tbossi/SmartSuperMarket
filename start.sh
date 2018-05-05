@@ -16,6 +16,9 @@ fi
 APP_NAME="smart_supermarket"
 SRC_DIR="src"
 HTTP_PORT=3000
+TCP_PORT=9090
+FLOW_FILE="./node-red/smart_supermarket-flows.json"
+DATASET_FILE="./dataset/smart_supermarket-dataset.json"
 
 if ! hash dockerd 2>/dev/null; then
 	echo "It seems Docker is not yet installed. Fixing..."
@@ -52,11 +55,14 @@ cd $SRC_DIR
 docker build -t $APP_NAME .
 cd ..
 
+alert "Inserting dataset in mongodb"
+mongo $APP_NAME --eval "db.dropDatabase()"
+mongoimport --jsonArray --db $APP_NAME --collection products --file $DATASET_FILE
 
 alert "Starting node-red"
-node-red > node-red.log 2>&1 &
+node-red $FLOW_FILE > node-red.log 2>&1 &
 
 alert "Starting $APP_NAME"
-docker run -p $HTTP_PORT:$HTTP_PORT --rm -t $APP_NAME &
+docker run -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT:$TCP_PORT --rm -t $APP_NAME &
 
 firefox -new-tab -url http://localhost:$HTTP_PORT/ -new-tab -url http://localhost:1880/

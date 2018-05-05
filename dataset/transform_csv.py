@@ -50,5 +50,5 @@ print('line length', len(df.index))
 print('column length', len(df.columns))
 
 json_file = df.to_json(orient='records')
-with open("supermarket.json", "w") as text_file:
+with open("smart_supermarket-dataset.json", "w") as text_file:
     text_file.write(json_file)
