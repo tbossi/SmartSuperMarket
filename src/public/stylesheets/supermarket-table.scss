@@ -1,6 +1,5 @@
 .supermarket-table {
   width: 600px;
-  height: 600px;
   display: grid;
   grid-column-gap: .5vw;
   grid-row-gap: .5vw;
@@ -9,13 +8,13 @@
   &:before {
     display: block;
     content: '';
-    grid-row: 9;
-    grid-column: 8;
+    grid-row: 13;
+    grid-column: 10;
   }
 
   & > li {
-    width: 65px;
-    height: 65px;
+    width: 70px;
+    height: 30px;
     display: flex;
     position: relative;
     justify-content: center;
