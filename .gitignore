@@ -1,4 +1,4 @@
 .idea
 src/node_modules
 node-red.log
-node-red/.flow.json.backup
+node-red/.smart_supermarket-flows.json.backup
