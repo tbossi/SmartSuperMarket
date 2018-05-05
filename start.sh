@@ -63,6 +63,6 @@ alert "Starting node-red"
 node-red $FLOW_FILE > node-red.log 2>&1 &
 
 alert "Starting $APP_NAME"
-docker run -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT:$TCP_PORT --rm -t $APP_NAME &
+docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT:$TCP_PORT --rm -t $APP_NAME &
 
 firefox -new-tab -url http://localhost:$HTTP_PORT/ -new-tab -url http://localhost:1880/
