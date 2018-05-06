@@ -6,6 +6,7 @@ const tcpServer = require('../servers/tcp-server');
 const ioDevice = require('../devices/io-device');
 const digitalDevice = require('../devices/digital-device');
 const analogicalDevice = require('../devices/analogical-device');
+const positionDevice = require('../devices/position-device');
 const smartSupermarket = require('../smart-supermarket');
 
 class serverContainer {
@@ -25,7 +26,12 @@ for (let i = 1; i < 6; i++) {
     shelves.addDevice(`S${i}_Rem`, new analogicalDevice(`Shelf ${i} removed product id`, 0));
 }
 
-const smartSupermarketApp = new smartSupermarket(shelves);
+const shoppingCarts = new ioDevice("Shopping carts");
+for (let i = 0; i < 20; i++) {
+    shoppingCarts.addDevice(`Cart_${i}`, new positionDevice(`Cart ${i} position`, {x:0, y:0}));
+}
+
+const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts);
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
