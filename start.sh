@@ -12,7 +12,7 @@ if [ $EUID != 0 ]; then
 	exit $?
 fi
 
-#Variables
+# Variables
 APP_NAME="smart_supermarket"
 SRC_DIR="src"
 HTTP_PORT=3000
@@ -23,7 +23,7 @@ DATASET_FILE="./dataset/smart_supermarket-dataset.json"
 if ! hash dockerd 2>/dev/null; then
 	echo "It seems Docker is not yet installed. Fixing..."
 
-	alert "Downloading Docker"
+	alert "Downloading Docker (this can take some time...)"
 	mkdir temp
 	cd temp
 	wget https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
@@ -50,7 +50,7 @@ else
 fi
 
 
-alert "Building container"
+alert "Building container (this can take some time...)"
 cd $SRC_DIR
 docker build -t $APP_NAME .
 cd ..
@@ -65,4 +65,10 @@ node-red $FLOW_FILE > node-red.log 2>&1 &
 alert "Starting $APP_NAME"
 docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT:$TCP_PORT --rm -t $APP_NAME &
 
-firefox -new-tab -url http://localhost:$HTTP_PORT/ -new-tab -url http://localhost:1880/
+firefox -new-tab -url http://localhost:$HTTP_PORT/devices -new-tab -url http://localhost:1880/ui -new-tab -url http://localhost:1880/
+
+
+# when firefox is closed we can stop background processes:
+alert "Stopping background processes (just wait...)"
+kill $(ps aux | grep node-red | awk '{print $2}')
+docker stop $(docker ps -a -q -f name=smart_supermarket)
