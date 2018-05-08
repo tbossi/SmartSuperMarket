@@ -21,7 +21,7 @@ class serverContainer {
 
 const shelves = new ioDevice("Shelves");
 shelves.addDevice("S1_Temp", new analogicalDevice("Shelf 1 temperature", 4.0));
-for (let i = 1; i < 6; i++) {
+for (let i = 1; i <= 5; i++) {
     shelves.addDevice(`S${i}_Add`, new analogicalDevice(`Shelf ${i} added product id`, 0));
     shelves.addDevice(`S${i}_Rem`, new analogicalDevice(`Shelf ${i} removed product id`, 0));
 }
