@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# To enable this pre-commit hook please move to root folder of the repo and run
+# pip install pre-commit        (WARNING: it may need sudo)
+# ln -sf ../../.git-hooks/pre-commit .git/hooks/pre-commit 
+
+pre-commit run --all-files
+# don't place echo after this line because this can change exit code!!!

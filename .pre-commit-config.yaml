@@ -1,0 +1,7 @@
+fail_fast: false
+repos:
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v1.2.3
+    hooks:
+      - id: pretty-format-json
+        args: ['--autofix', '--no-sort-keys', '--no-ensure-ascii']
