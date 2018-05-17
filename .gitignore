@@ -2,3 +2,4 @@
 src/node_modules
 node-red.log
 node-red/.smart_supermarket-flows.json.backup
+dataset/venv
