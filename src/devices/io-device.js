@@ -79,6 +79,11 @@ class ioDevice {
                 result.value = this.devices[command.device].value;
                 break;
         }
+
+        if (typeof result.value === "object") {
+            result.value = JSON.stringify(result.value);
+        }
+
         return result;
     }
 

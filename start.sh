@@ -16,7 +16,8 @@ fi
 APP_NAME="smart_supermarket"
 SRC_DIR="src"
 HTTP_PORT=3000
-TCP_PORT=9090
+TCP_PORT_SHELVES=9090
+TCP_PORT_CARTS=9091
 FLOW_FILE="./node-red/smart_supermarket-flows.json"
 DATASET_FILE="./dataset/smart_supermarket-dataset.json"
 
@@ -27,9 +28,9 @@ if ! hash dockerd 2>/dev/null; then
 	mkdir temp
 	cd temp
 	wget https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
-	tar xzvf docker-17.04.0-ce.tgz
-
+	
 	alert "Installing Docker"
+	tar xzvf docker-17.04.0-ce.tgz
 	cp -r docker/* /usr/bin/
 	chmod -R 755 /usr/bin/docker*
 
@@ -52,7 +53,7 @@ fi
 
 alert "Building container (this can take some time...)"
 cd $SRC_DIR
-docker build -t $APP_NAME .
+docker build --no-cache -t $APP_NAME .
 cd ..
 
 alert "Inserting dataset in mongodb"
@@ -63,7 +64,7 @@ alert "Starting node-red"
 node-red $FLOW_FILE > node-red.log 2>&1 &
 
 alert "Starting $APP_NAME"
-docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT:$TCP_PORT --rm -t $APP_NAME &
+docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT_SHELVES:$TCP_PORT_SHELVES -p $TCP_PORT_CARTS:$TCP_PORT_CARTS --rm -t $APP_NAME &
 
 firefox -new-tab -url http://localhost:$HTTP_PORT/devices -new-tab -url http://localhost:1880/ui -new-tab -url http://localhost:1880/
 
@@ -71,4 +72,4 @@ firefox -new-tab -url http://localhost:$HTTP_PORT/devices -new-tab -url http://l
 # when firefox is closed we can stop background processes:
 alert "Stopping background processes (just wait...)"
 kill $(ps aux | grep node-red | awk '{print $2}')
-docker stop $(docker ps -a -q -f name=smart_supermarket)
+docker stop $(docker ps -a -q -f name=$APP_NAME)

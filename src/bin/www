@@ -26,7 +26,7 @@ for (let i = 1; i <= 5; i++) {
     shelves.addDevice(`S${i}_Rem`, new analogicalDevice(`Shelf ${i} removed product id`, -1));
 }
 
-const shoppingCarts = new ioDevice("Shopping carts");
+const shoppingCarts = new ioDevice("ShoppingCarts");
 for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}`, new positionDevice(`Cart ${i} position`, {x:0, y:0}));
 }
@@ -35,5 +35,6 @@ const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts);
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
-    new tcpServer(9090, shelves)
+    new tcpServer(9090, shelves),
+    new tcpServer(9091, shoppingCarts)
 ).start();
