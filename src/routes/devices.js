@@ -9,22 +9,7 @@ function router(devices) {
         res.header('Pragma','no-cache');
         res.render('devices', {
             title: 'Devices status',
-            devices: devices.map(d => d.devicesValues),
-            heatmap: [
-                ['S', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
-                ['S', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
-                ['S', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
-                ['S', 'N', 'N', 'S', 'S', 'S', 'S', 'S', 'N', 'N'],
-                ['S', 'N', 'N', 'S', 'S', 'S', 'S', 'S', 'N', 'N'],
-                ['S', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'E'],
-                ['S', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'E'],
-                ['S', 'N', 'N', 'S', 'S', 'S', 'S', 'S', 'N', 'N'],
-                ['S', 'N', 'N', 'S', 'S', 'S', 'S', 'S', 'N', 'N'],
-                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
-                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
-                ['N', 'E', 'E', 'N', 'S', 'S', 'S', 'S', 'S', 'S'],
-
-            ]
+            devices: devices.map(d => d.devicesValues)
         });
     });
 

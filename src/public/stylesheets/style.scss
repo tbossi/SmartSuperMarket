@@ -1,8 +1,40 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: rgb(240,240,240);
+  margin: 0 auto;
 }
 
 a {
   color: #00B7FF;
+}
+
+.devices-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  .device {
+    margin: 5px;
+    background: white;
+    border-radius: 5px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid lightgrey;
+    width: 380px;
+
+    h3 {
+      color: firebrick;
+    }
+
+    .sensor span {
+      font-weight: bold;
+      float: right;
+      padding: 1px 4px;
+      border-radius: 2px;
+
+      &.just-updated {
+        background: orange;
+      }
+    }
+  }
 }

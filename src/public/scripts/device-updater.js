@@ -15,5 +15,9 @@ function onStatusChange(data) {
 
     newValue = JSON.stringify(newValue);
 
-    $("#" + deviceName).find("#" + sensorId).find("span").text(newValue);
+    var updatedClass= "just-updated";
+    var span = $("#" + deviceName).find("#" + sensorId).find("span");
+    span.text(newValue);
+    span.addClass(updatedClass);
+    setTimeout(function() { span.removeClass(updatedClass); }, 1000);
 }
