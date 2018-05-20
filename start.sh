@@ -20,6 +20,7 @@ TCP_PORT_SHELVES=9090
 TCP_PORT_CARTS=9091
 FLOW_FILE="./node-red/smart_supermarket-flows.json"
 DATASET_FILE="./dataset/smart_supermarket-dataset.json"
+MAP_FILE="./dataset/smart_supermarket-map.json"
 
 if ! hash dockerd 2>/dev/null; then
 	echo "It seems Docker is not yet installed. Fixing..."
@@ -59,6 +60,7 @@ cd ..
 alert "Inserting dataset in mongodb"
 mongo $APP_NAME --eval "db.dropDatabase()"
 mongoimport --jsonArray --db $APP_NAME --collection products --file $DATASET_FILE
+mongoimport --jsonArray --db $APP_NAME --collection map --file $MAP_FILE
 
 alert "Starting node-red"
 node-red $FLOW_FILE > node-red.log 2>&1 &

@@ -108,6 +108,35 @@
     ]
   },
   {
+    "id": "821fa547.1b5ce8",
+    "type": "subflow",
+    "name": "Mongo get market map",
+    "info": "",
+    "in": [
+      {
+        "x": 80,
+        "y": 70,
+        "wires": [
+          {
+            "id": "92218ff1.234658"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 640,
+        "y": 70,
+        "wires": [
+          {
+            "id": "36f1a4d5.84703c",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "dcdbb1c1.7b8b3",
     "type": "ui_base",
     "theme": {
@@ -697,11 +726,11 @@
     "id": "4963073a.67a6b",
     "type": "function",
     "z": "11b01065.87c36",
-    "name": "Continue only if a product has been added",
+    "name": "Continue only if a product has been added or removed",
     "func": "msg.value = parseInt(msg.value);\n\nif (msg.value >= 0) {\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
-    "x": 240,
+    "x": 280,
     "y": 620,
     "wires": [
       [
@@ -1421,11 +1450,11 @@
     "order": 0,
     "width": "10",
     "height": "12",
-    "format": "<style>\n    #grid table {\n        border-collapse: collapse;\n        border-spacing: 0;\n    }\n    #grid .cell {\n        color: black;\n        width: 45px;\n        height: 45px;\n        text-align: center;\n        line-height: 40px;\n        padding: 2px;\n        box-sizing: border-box;\n        border: 1px dashed grey;\n        background: rgb(245,245,245);\n        margin: 0;\n    }\n    #grid .cell.alone {\n        background: rgb(10,245,10);\n    }\n    #grid .cell.half {\n        background: rgb(245,245,10);\n    }\n    #grid .cell.full {\n        background: rgb(245,10,10);\n    }\n</style>\n<div id=\"grid\">\n    <table>\n        <tr ng-repeat=\"row in msg.grid.grid track by $index\">\n            <td ng-repeat=\"cell in row track by $index\">\n                <div class=\"cell\" ng-class=\"{\n                    alone: cell==1,\n                    half: cell>1 && cell<4,\n                    full: cell>=4\n                    }\">{{cell}}</div>\n            </td>\n        </tr>\n    </table>\n</div>",
+    "format": "<style>\n    #grid table {\n        border-collapse: collapse;\n        border-spacing: 0;\n    }\n    #grid .cell {\n        color: black;\n        width: 45px;\n        height: 45px;\n        text-align: center;\n        line-height: 40px;\n        padding: 2px;\n        box-sizing: border-box;\n        border: 1px dashed grey;\n        background: rgb(240,240,240);\n        margin: 0;\n    }\n    #grid .cell.shelf {\n        border: 1px solid rgb(40,40,180);\n        background: rgb(40,40,180);\n        color: white;\n        font-weight: bold;\n    }\n    #grid .cell.totem {\n        background: white;\n        color: grey;\n        font-weight: bold;\n    }\n    #grid .cell.alone {\n        background: rgb(10,245,10);\n    }\n    #grid .cell.half {\n        background: rgb(245,245,10);\n    }\n    #grid .cell.full {\n        background: rgb(245,10,10);\n    }\n</style>\n<div id=\"grid\">\n    <table>\n        <tr ng-repeat=\"row in msg.grid.grid track by $index\">\n            <td ng-repeat=\"cell in row track by $index\">\n                <div class=\"cell\" ng-class=\"{\n                    shelf: !Number.isInteger(cell) && cell.charAt(0) == 'S',\n                    totem: !Number.isInteger(cell) && cell.charAt(0) == 'T',\n                    alone: cell==1,\n                    half:  cell>1 && cell<4,\n                    full:  cell>=4\n                    }\">{{cell}}</div>\n            </td>\n        </tr>\n    </table>\n</div>",
     "storeOutMessages": true,
     "fwdInMessages": true,
     "templateScope": "local",
-    "x": 400,
+    "x": 590,
     "y": 230,
     "wires": [
       []
@@ -1478,7 +1507,7 @@
     "y": 140,
     "wires": [
       [
-        "d8a8d332.30672"
+        "d18c7dab.f45df8"
       ]
     ]
   },
@@ -1487,10 +1516,10 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "update supermarket grid",
-    "func": "/* \n * Workaround for class definition in node-red:\n * define the class inside a function with strict mode\n */\nfunction makeGrid(w,h) {\n    \"use strict\";\n    class Grid {\n        constructor(width, height) {\n            this.grid = [];\n            this.width = width;\n            this.height = height;\n            this.carts = {};\n            for (var y = 0; y < height; y++) {\n                this.grid[y] = [];\n                for (var x = 0; x < width; x++) {\n                    this.grid[y][x] = 0;\n                }\n            }\n        }\n    \n        move(cartId, x, y) {\n            if (x < 0 || x >= this.width) {\n                throw new Error();\n            }\n            if (y < 0 || y >= this.height) {\n                throw new Error();\n            }\n            \n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.grid[y][x] += 1;\n            this.carts[cartId] = {x: x, y: y};\n        }\n    \n        remove(cartId) {\n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.carts[cartId] = undefined;\n        }\n    }\n    \n    return new Grid(w,h);\n}\n\nvar grid = context.get(\"grid\");\nif (grid === null || grid === undefined) {\n    grid = makeGrid(10, 12);\n}\n\nmsg.value = JSON.parse(msg.value);\ngrid.move(msg.deviceId, Math.floor(msg.value.x), Math.floor(msg.value.y));\ncontext.set(\"grid\", grid);\n\nmsg = {};\nmsg.grid = grid;\nreturn msg;",
+    "func": "/* \n * Workaround for class definition in node-red:\n * define the class inside a function with strict mode\n */\nfunction makeGrid(mongoGrid) {\n    \"use strict\";\n    class Grid {\n        constructor(mongoGrid) {\n            this.grid = [];\n            this.width = mongoGrid.width;\n            this.height = mongoGrid.height;\n            this.carts = {};\n            for (var y = 0; y < this.height; y++) {\n                this.grid[y] = [];\n                for (var x = 0; x < this.width; x++) {\n                    var cell = mongoGrid.grid[y][x];\n                    this.grid[y][x] = cell === \"\" ? 0 : cell;\n                }\n            }\n        }\n    \n        move(cartId, x, y) {\n            if (x < 0 || x >= this.width) {\n                throw new Error(`out of grid x ${x}`);\n            }\n            if (y < 0 || y >= this.height) {\n                throw new Error(`out of grid y ${y}`);\n            }\n            if (!Number.isInteger(this.grid[y][x])) {\n                throw new Error(`invalid position ${x},${y}`);\n            }\n            \n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.grid[y][x] += 1;\n            this.carts[cartId] = {x: x, y: y};\n        }\n    \n        remove(cartId) {\n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.carts[cartId] = undefined;\n        }\n    }\n    \n    return new Grid(mongoGrid);\n}\n\nvar grid = context.get(\"grid\");\nif (grid === null || grid === undefined) {\n    grid = makeGrid(msg.payload);\n}\n\n\nmsg.value = JSON.parse(msg.value);\ngrid.move(msg.deviceId, Math.floor(msg.value.x), Math.floor(msg.value.y));\ncontext.set(\"grid\", grid);\n\nmsg = {};\nmsg.grid = grid;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 180,
+    "x": 380,
     "y": 230,
     "wires": [
       [
@@ -1589,13 +1618,13 @@
     "crontab": "",
     "once": false,
     "x": 160,
-    "y": 420,
+    "y": 400,
     "wires": [
       [
-        "c60fe722.612468",
         "874cdf2a.86cd88",
         "328f2137.cb1236",
-        "35507ab3.6e5bc6"
+        "35507ab3.6e5bc6",
+        "3cb6c56e.3d9112"
       ]
     ]
   },
@@ -1604,11 +1633,11 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "generate random cart positions",
-    "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index+1) % 20;\ncontext.set(\"deviceIndex\", index);\n\nif (Math.random() > 0.3) {\n    var x = Math.floor(Math.random() * 10);\n    var y = Math.floor(Math.random() * 12);\n\n    msg = {};\n    msg.device = \"cart\";\n    msg.deviceId = `Cart_${index}`;\n    msg.value = `${x},${y}`;\n    return msg;\n}",
+    "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index+1) % 20;\ncontext.set(\"deviceIndex\", index);\n\nvar width = msg.payload.width;\nvar height = msg.payload.height;\nvar grid = msg.payload.grid;\n\nvar x = Math.floor(Math.random() * width);\nvar y = Math.floor(Math.random() * height);\n    \nif (grid[y][x] === \"\") {\n    msg = {};\n    msg.device = \"cart\";\n    msg.deviceId = `Cart_${index}`;\n    msg.value = `${x},${y}`;\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
-    "x": 600,
-    "y": 420,
+    "x": 820,
+    "y": 400,
     "wires": [
       [
         "55135180.94af78"
@@ -1631,10 +1660,10 @@
     "randomUnits": "seconds",
     "drop": false,
     "x": 370,
-    "y": 400,
+    "y": 380,
     "wires": [
       [
-        "c60fe722.612468"
+        "3cb6c56e.3d9112"
       ]
     ]
   },
@@ -1654,10 +1683,10 @@
     "randomUnits": "seconds",
     "drop": false,
     "x": 370,
-    "y": 440,
+    "y": 420,
     "wires": [
       [
-        "c60fe722.612468"
+        "3cb6c56e.3d9112"
       ]
     ]
   },
@@ -1677,10 +1706,10 @@
     "randomUnits": "seconds",
     "drop": false,
     "x": 370,
-    "y": 370,
+    "y": 350,
     "wires": [
       [
-        "c60fe722.612468"
+        "3cb6c56e.3d9112"
       ]
     ]
   },
@@ -1688,10 +1717,65 @@
     "id": "55135180.94af78",
     "type": "subflow:75994a9b.4846ac",
     "z": "186b7a65.42ec46",
-    "x": 870,
-    "y": 420,
+    "x": 850,
+    "y": 440,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "36f1a4d5.84703c",
+    "type": "mongodb2 in",
+    "z": "821fa547.1b5ce8",
+    "service": "_ext_",
+    "configNode": "d8a581dc.b0cfa8",
+    "name": "Shelves products collection",
+    "collection": "map",
+    "operation": "",
+    "x": 480,
+    "y": 70,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "92218ff1.234658",
+    "type": "function",
+    "z": "821fa547.1b5ce8",
+    "name": "find product availability",
+    "func": "msg.operation = \"findOne\"\nmsg.payload = [\n    {}, {}\n]\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 230,
+    "y": 70,
+    "wires": [
+      [
+        "36f1a4d5.84703c"
+      ]
+    ]
+  },
+  {
+    "id": "3cb6c56e.3d9112",
+    "type": "subflow:821fa547.1b5ce8",
+    "z": "186b7a65.42ec46",
+    "x": 570,
+    "y": 400,
+    "wires": [
+      [
+        "c60fe722.612468"
+      ]
+    ]
+  },
+  {
+    "id": "d18c7dab.f45df8",
+    "type": "subflow:821fa547.1b5ce8",
+    "z": "186b7a65.42ec46",
+    "x": 150,
+    "y": 230,
+    "wires": [
+      [
+        "d8a8d332.30672"
+      ]
     ]
   }
 ]
