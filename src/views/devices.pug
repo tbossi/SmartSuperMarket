@@ -12,5 +12,5 @@ block content
                 h3= device.name
                 div(class='sensors')
                     each sensor in device.sensors
-                        div(class='sensor', id=sensor.id)
-                            p [ID: #{sensor.id}] #{sensor.name}: #[span(class=sensor.result.type) #{JSON.stringify(sensor.result.value)}]
+                        div(class='sensor', id=sensor.id) [ID: #{sensor.id}] #{sensor.name}:
+                            span(class=sensor.result.type) #{JSON.stringify(sensor.result.value)}

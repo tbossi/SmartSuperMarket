@@ -1,7 +1,7 @@
 body {
   padding: 50px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background: rgb(240,240,240);
+  background: rgb(240, 240, 240);
   margin: 0 auto;
 }
 
@@ -20,20 +20,38 @@ a {
     padding: 0 15px;
     box-sizing: border-box;
     border: 1px solid lightgrey;
-    width: 380px;
 
     h3 {
       color: firebrick;
     }
 
-    .sensor span {
-      font-weight: bold;
-      float: right;
-      padding: 1px 4px;
-      border-radius: 2px;
+    &#Shelves .sensors {
+      column-count: 1;
+    }
+    &#ShoppingCarts .sensors {
+      column-count: 2;
+    }
 
-      &.just-updated {
-        background: orange;
+    .sensors {
+      column-gap: 40px;
+      column-rule: 1px solid lightgrey;
+
+      .sensor {
+        width: 380px;
+        padding: 5px 0;
+        box-sizing: border-box;
+        display: flex;
+
+        span {
+          font-weight: bold;
+          padding: 1px 4px;
+          border-radius: 2px;
+          margin-left: auto;
+
+          &.just-updated {
+            background: orange;
+          }
+        }
       }
     }
   }

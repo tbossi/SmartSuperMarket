@@ -29,6 +29,8 @@ for (let i = 1; i <= 5; i++) {
 const shoppingCarts = new ioDevice("ShoppingCarts");
 for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}`, new positionDevice(`Cart ${i} position`, {x:0, y:0}));
+    shoppingCarts.addDevice(`Cart_${i}_Add`, new analogicalDevice(`Cart ${i} added product id`, -1));
+    shoppingCarts.addDevice(`Cart_${i}_Rem`, new analogicalDevice(`Cart ${i} removed product id`, -1));
 }
 
 const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts);
