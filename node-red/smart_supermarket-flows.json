@@ -341,7 +341,7 @@
     "name": "Carts positions",
     "tab": "366b0688.9c8872",
     "disp": true,
-    "width": "14",
+    "width": "20",
     "collapse": false
   },
   {
@@ -735,7 +735,7 @@
     "id": "97df9e3d.1f581",
     "type": "inject",
     "z": "11b01065.87c36",
-    "name": "Check shelf frequence",
+    "name": "Shelf check frequence",
     "topic": "",
     "payload": "true",
     "payloadType": "bool",
@@ -1208,16 +1208,16 @@
     "type": "ui_template",
     "z": "186b7a65.42ec46",
     "group": "9d4a3a62.d7ce4",
-    "name": "Carts Heatmap",
+    "name": "Carts current heatmap",
     "order": 0,
     "width": "10",
     "height": "12",
-    "format": "<style>\n    #grid table {\n        border-collapse: collapse;\n        border-spacing: 0;\n    }\n    #grid .cell {\n        color: black;\n        width: 45px;\n        height: 45px;\n        text-align: center;\n        line-height: 40px;\n        padding: 2px;\n        box-sizing: border-box;\n        border: 1px dashed grey;\n        background: rgb(240,240,240);\n        margin: 0;\n    }\n    #grid .cell.shelf {\n        border: 1px solid rgb(40,40,180);\n        background: rgb(40,40,180);\n        color: white;\n        font-weight: bold;\n    }\n    #grid .cell.totem {\n        background: white;\n        color: grey;\n        font-weight: bold;\n    }\n    #grid .cell.alone {\n        background: rgb(10,245,10);\n    }\n    #grid .cell.half {\n        background: rgb(245,245,10);\n    }\n    #grid .cell.full {\n        background: rgb(245,10,10);\n    }\n</style>\n<div id=\"grid\">\n    <table>\n        <tr ng-repeat=\"row in msg.grid.grid track by $index\">\n            <td ng-repeat=\"cell in row track by $index\">\n                <div class=\"cell\" ng-class=\"{\n                    shelf: !Number.isInteger(cell) && cell.charAt(0) == 'S',\n                    totem: !Number.isInteger(cell) && cell.charAt(0) == 'T',\n                    alone: cell==1,\n                    half:  cell>1 && cell<4,\n                    full:  cell>=4\n                    }\">{{cell}}</div>\n            </td>\n        </tr>\n    </table>\n</div>",
+    "format": "<style>{{msg.style}}</style>\n<div id=\"grid\">\n    <h2>Current carts position</h2>\n    <table>\n        <tr ng-repeat=\"row in msg.currentGrid.grid track by $index\">\n            <td ng-repeat=\"cell in row track by $index\">\n                <div class=\"cell\" ng-class=\"{\n                    shelf: !Number.isInteger(cell) && cell.charAt(0) == 'S',\n                    totem: !Number.isInteger(cell) && cell.charAt(0) == 'T',\n                    q1: cell==1,\n                    q2: cell>1 && cell<=2,\n                    q3: cell>2 && cell<=3,\n                    q4: cell>3 && cell<=4,\n                    q5: cell>4\n                    }\">{{cell}}</div>\n            </td>\n        </tr>\n    </table>\n</div>",
     "storeOutMessages": true,
     "fwdInMessages": true,
     "templateScope": "local",
-    "x": 590,
-    "y": 230,
+    "x": 770,
+    "y": 200,
     "wires": [
       []
     ]
@@ -1277,15 +1277,15 @@
     "id": "d8a8d332.30672",
     "type": "function",
     "z": "186b7a65.42ec46",
-    "name": "update supermarket grid",
-    "func": "/* \n * Workaround for class definition in node-red:\n * define the class inside a function with strict mode\n */\nfunction makeGrid(mongoGrid) {\n    \"use strict\";\n    class Grid {\n        constructor(mongoGrid) {\n            this.grid = [];\n            this.width = mongoGrid.width;\n            this.height = mongoGrid.height;\n            this.carts = {};\n            for (var y = 0; y < this.height; y++) {\n                this.grid[y] = [];\n                for (var x = 0; x < this.width; x++) {\n                    var cell = mongoGrid.grid[y][x];\n                    this.grid[y][x] = cell === \"\" ? 0 : cell;\n                }\n            }\n        }\n    \n        move(cartId, x, y) {\n            if (x < 0 || x >= this.width) {\n                throw new Error(`out of grid x ${x}`);\n            }\n            if (y < 0 || y >= this.height) {\n                throw new Error(`out of grid y ${y}`);\n            }\n            if (!Number.isInteger(this.grid[y][x])) {\n                throw new Error(`invalid position ${x},${y}`);\n            }\n            \n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.grid[y][x] += 1;\n            this.carts[cartId] = {x: x, y: y};\n        }\n    \n        remove(cartId) {\n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.carts[cartId] = undefined;\n        }\n    }\n    \n    return new Grid(mongoGrid);\n}\n\nvar grid = context.get(\"grid\");\nif (grid === null || grid === undefined) {\n    grid = makeGrid(msg.payload);\n}\n\n\nmsg.value = JSON.parse(msg.value);\ngrid.move(msg.deviceId, Math.floor(msg.value.x), Math.floor(msg.value.y));\ncontext.set(\"grid\", grid);\n\nmsg = {};\nmsg.grid = grid;\nreturn msg;",
+    "name": "update supermarket grids",
+    "func": "/* \n * Workaround for class definition in node-red:\n * define the class inside a function with strict mode\n */\nfunction makeGrid(mongoGrid) {\n    \"use strict\";\n    class Grid {\n        constructor(mongoGrid) {\n            this.grid = [];\n            this.width = mongoGrid.width;\n            this.height = mongoGrid.height;\n            this.carts = {};\n            for (var y = 0; y < this.height; y++) {\n                this.grid[y] = [];\n                for (var x = 0; x < this.width; x++) {\n                    var cell = mongoGrid.grid[y][x];\n                    this.grid[y][x] = cell === \"\" ? 0 : cell;\n                }\n            }\n        }\n    \n        move(cartId, x, y) {\n            this.remove(cartId);\n            this.add(cartId,x,y);\n        }\n        \n        add(cartId, x, y) {\n            if (x < 0 || x >= this.width) {\n                throw new Error(`out of grid x ${x}`);\n            }\n            if (y < 0 || y >= this.height) {\n                throw new Error(`out of grid y ${y}`);\n            }\n            if (!Number.isInteger(this.grid[y][x])) {\n                throw new Error(`invalid position ${x},${y}`);\n            }\n            this.grid[y][x] += 1;\n            this.carts[cartId] = {x: x, y: y};\n        }\n    \n        remove(cartId) {\n            var oldPosition = this.carts[cartId];\n            if (typeof oldPosition !== \"undefined\") {\n                this.grid[oldPosition.y][oldPosition.x] -= 1;\n            }\n            this.carts[cartId] = undefined;\n        }\n    }\n    \n    return new Grid(mongoGrid);\n}\n\nvar currentGridKey = \"currentGrid\";\nvar cumulatedGridKey = \"cumulatedGrid\";\n\nvar currentGrid = context.get(currentGridKey);\nif (currentGrid === null || currentGrid === undefined) {\n    currentGrid = makeGrid(msg.payload);\n}\n\nvar cumulatedGrid = context.get(cumulatedGridKey);\nif (cumulatedGrid === null || cumulatedGrid === undefined) {\n    cumulatedGrid = makeGrid(msg.payload);\n}\n\nmsg.value = JSON.parse(msg.value);\nvar x = Math.floor(msg.value.x);\nvar y = Math.floor(msg.value.y);\ncurrentGrid.move(msg.deviceId, x, y);\ncumulatedGrid.add(msg.deviceId, x, y);\n\ncontext.set(currentGridKey, currentGrid);\ncontext.set(cumulatedGridKey, cumulatedGrid);\n\nmsg.currentGrid = currentGrid;\nmsg.cumulatedGrid = cumulatedGrid;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 380,
+    "x": 390,
     "y": 230,
     "wires": [
       [
-        "b445821a.a2f2b8"
+        "d834dc9d.2d209"
       ]
     ]
   },
@@ -1395,7 +1395,7 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "generate random cart positions",
-    "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index+1) % 20;\ncontext.set(\"deviceIndex\", index);\n\nvar width = msg.payload.width;\nvar height = msg.payload.height;\nvar grid = msg.payload.grid;\n\nvar x = Math.floor(Math.random() * width);\nvar y = Math.floor(Math.random() * height);\n    \nif (grid[y][x] === \"\") {\n    msg = {};\n    msg.device = \"cart\";\n    msg.deviceId = `Cart_${index}`;\n    msg.value = `${x},${y}`;\n    return msg;\n}",
+    "func": "function isFreeCell(grid, width, height, x, y) {\n    var X = Math.floor(x);\n    var Y = Math.floor(y);\n    return X >= 0 && X < width && Y >= 0 && Y < height && grid[Y][X] === \"\";\n}\n\nfunction getNewPosition(oldPosition, grid, width, height) {\n    var maxTries = 0;\n    var newPosition = {};\n    do {\n        var speed = Math.random() * (Math.random() > 0.4 ? 1.3 : 2.2);\n        var angle = Math.random() * 2 * Math.PI;\n        newPosition = {\n            x : oldPosition.x + (speed * Math.cos(angle)),\n            y : oldPosition.y + (speed * Math.sin(angle))\n        };\n        maxTries++;\n    } while (maxTries < 3 &&\n        !isFreeCell(grid, width, height, newPosition.x, newPosition.y));\n    \n    //rounding decimals\n    newPosition.x = Number(Math.round(newPosition.x + 'e2') + 'e-2');\n    newPosition.y = Number(Math.round(newPosition.y + 'e2') + 'e-2');\n    return newPosition;\n}\n\nvar indexKey = \"deviceIndex\";\nvar index = context.get(indexKey) || 0;\nindex = (index+1) % 20;\ncontext.set(indexKey, index);\n\nvar width = msg.payload.width;\nvar height = msg.payload.height;\nvar grid = msg.payload.grid;\n\nvar positionKey = `position_${index}`;\nvar oldPosition = context.get(positionKey) || {\n    x : Math.random() * width,\n    y : Math.random() * height\n};\n\nvar newPosition = getNewPosition(oldPosition, grid, width, height);\n    \nif (isFreeCell(grid, width, height, newPosition.x, newPosition.y)) {\n    msg = {};\n    msg.device = \"cart\";\n    msg.deviceId = `Cart_${index}`;\n    msg.value = `${newPosition.x},${newPosition.y}`;\n    context.set(positionKey, newPosition);\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
     "x": 820,
@@ -1626,6 +1626,45 @@
       [
         "94c4dfd0.1ae0d"
       ]
+    ]
+  },
+  {
+    "id": "d834dc9d.2d209",
+    "type": "template",
+    "z": "186b7a65.42ec46",
+    "name": "map style",
+    "field": "style",
+    "fieldType": "msg",
+    "format": "css",
+    "syntax": "plain",
+    "template": "#grid table {\n    border-collapse: collapse;\n    border-spacing: 0;\n}\n#grid .cell {\n    color: black;\n    width: 45px;\n    height: 45px;\n    text-align: center;\n    line-height: 40px;\n    padding: 2px;\n    box-sizing: border-box;\n    border: 1px dashed grey;\n    background: rgb(240,240,240);\n    margin: 0;\n}\n#grid .cell.shelf {\n    border: 1px solid rgb(40,40,180);\n    background: rgb(40,40,180);\n    color: white;\n    font-weight: bold;\n}\n#grid .cell.totem {\n    background: white;\n    color: grey;\n    font-weight: bold;\n}\n#grid .cell.q1 {\n    background: rgb(5,245,5);\n}\n#grid .cell.q2 {\n    background: rgb(150,245,5);\n}\n#grid .cell.q3 {\n    background: rgb(245,245,5);\n}\n#grid .cell.q4 {\n    background: rgb(245,140,5);\n}\n#grid .cell.q5 {\n    background: rgb(245,5,5);\n}",
+    "output": "str",
+    "x": 580,
+    "y": 230,
+    "wires": [
+      [
+        "b445821a.a2f2b8",
+        "1d567015.9722f8"
+      ]
+    ]
+  },
+  {
+    "id": "1d567015.9722f8",
+    "type": "ui_template",
+    "z": "186b7a65.42ec46",
+    "group": "9d4a3a62.d7ce4",
+    "name": "Carts cumulated heatmap",
+    "order": 0,
+    "width": "10",
+    "height": "12",
+    "format": "<style>{{msg.style}}</style>\n<div id=\"grid\">\n    <h2>Cumulated carts position</h2>\n    <table>\n        <tr ng-repeat=\"row in msg.cumulatedGrid.grid track by $index\">\n            <td ng-repeat=\"cell in row track by $index\">\n                <div class=\"cell\" ng-class=\"{\n                    shelf: !Number.isInteger(cell) && cell.charAt(0) == 'S',\n                    totem: !Number.isInteger(cell) && cell.charAt(0) == 'T',\n                    q1: cell==1,\n                    q2: cell>1 && cell<=8,\n                    q3: cell>8 && cell<=16,\n                    q4: cell>16 && cell<=30,\n                    q5: cell>30\n                    }\">{{cell}}</div>\n            </td>\n        </tr>\n    </table>\n</div>",
+    "storeOutMessages": true,
+    "fwdInMessages": true,
+    "templateScope": "local",
+    "x": 790,
+    "y": 260,
+    "wires": [
+      []
     ]
   }
 ]
