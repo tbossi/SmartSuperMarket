@@ -166,6 +166,35 @@
     ]
   },
   {
+    "id": "6306fa17.2370dc",
+    "type": "subflow",
+    "name": "Mongo update price",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 30,
+        "wires": [
+          {
+            "id": "afc44443.15a23"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 760,
+        "y": 20,
+        "wires": [
+          {
+            "id": "6fe7e765.9bc12",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "dcdbb1c1.7b8b3",
     "type": "ui_base",
     "theme": {
@@ -1048,7 +1077,7 @@
     "name": "HTTP response",
     "statusCode": "",
     "headers": {},
-    "x": 660,
+    "x": 760,
     "y": 300,
     "wires": []
   },
@@ -1130,8 +1159,10 @@
     "type": "json",
     "z": "175c22d2.0ef64d",
     "name": "",
+    "property": "payload",
+    "action": "",
     "pretty": false,
-    "x": 290,
+    "x": 430,
     "y": 300,
     "wires": [
       [
@@ -1147,7 +1178,7 @@
     "func": "msg.payload = 'Data correcly transmitted: '+msg.payload;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 460,
+    "x": 580,
     "y": 300,
     "wires": [
       [
@@ -1164,11 +1195,11 @@
     "method": "post",
     "upload": false,
     "swaggerDoc": "",
-    "x": 120,
+    "x": 80,
     "y": 300,
     "wires": [
       [
-        "94c4dfd0.1ae0d"
+        "ea2da5a4.10451"
       ]
     ]
   },
@@ -1550,6 +1581,50 @@
     "wires": [
       [
         "62cffaa8.98178c"
+      ]
+    ]
+  },
+  {
+    "id": "6fe7e765.9bc12",
+    "type": "mongodb2 in",
+    "z": "6306fa17.2370dc",
+    "service": "_ext_",
+    "configNode": "d8a581dc.b0cfa8",
+    "name": "Shelves products collection",
+    "collection": "products",
+    "operation": "",
+    "x": 540,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "afc44443.15a23",
+    "type": "function",
+    "z": "6306fa17.2370dc",
+    "name": "update discount",
+    "func": "var id = parseInt(msg.payload.id);\nvar price = parseFloat(msg.payload.price);\nmsg.operation = \"updateOne\";\nmsg.payload = [\n    {\n        'index' : id\n    }, {\n       $set: {\n           'price.discount': price\n        } \n    }\n]  \nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 220,
+    "y": 80,
+    "wires": [
+      [
+        "6fe7e765.9bc12"
+      ]
+    ]
+  },
+  {
+    "id": "ea2da5a4.10451",
+    "type": "subflow:6306fa17.2370dc",
+    "z": "175c22d2.0ef64d",
+    "name": "",
+    "x": 270,
+    "y": 300,
+    "wires": [
+      [
+        "94c4dfd0.1ae0d"
       ]
     ]
   }
