@@ -143,8 +143,8 @@
     "info": "",
     "in": [
       {
-        "x": 50,
-        "y": 30,
+        "x": 40,
+        "y": 20,
         "wires": [
           {
             "id": "36cb8568.df137a"
@@ -154,8 +154,8 @@
     ],
     "out": [
       {
-        "x": 700,
-        "y": 30,
+        "x": 660,
+        "y": 20,
         "wires": [
           {
             "id": "97983c7e.ee6eb8",
@@ -1022,11 +1022,11 @@
     "method": "get",
     "upload": false,
     "swaggerDoc": "",
-    "x": 110,
+    "x": 70,
     "y": 40,
     "wires": [
       [
-        "62cffaa8.98178c"
+        "73a34e6c.d68dd"
       ]
     ]
   },
@@ -1057,10 +1057,10 @@
     "type": "function",
     "z": "175c22d2.0ef64d",
     "name": "Add ajax Url",
-    "func": "msg.url = \"api/managesupermarket\";\nreturn msg;",
+    "func": "msg.url = \"api/managesupermarket\";\nmsg.products = msg.payload;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 270,
+    "x": 450,
     "y": 40,
     "wires": [
       [
@@ -1079,7 +1079,7 @@
     "syntax": "plain",
     "template": "$(document).ready(function(e) {\n    $(\"form[ajax=true]\").submit(function(e) {\n        e.preventDefault(); //disativa azioni di default del bottone\n        var form_data = $(this).serialize(); //crea un json con i dati della form\n        var form_url = $(this).attr(\"action\"); //legge il parametro action\n        var form_method = $(this).attr(\"method\").toUpperCase(); //legge il parametro methos\n        $.ajax({\n            url: form_url,\n            type: form_method,\n            data: form_data,\n            cache: false,\n            success: function(returnhtml){\n                $(\"#result\").html(returnhtml);\n                }\n        });\n    });\n    \n    \n    \n    \n// Search price AREA\n    var jobCount = $('#list .in').length;\n  $('.list-count').text(jobCount + ' items');\n    \n  \n  $(\"#search-text\").keyup(function () {  \n    var searchTerm = $(\"#search-text\").val();\n    var listItem = $('#list').children('li');\n  \n    \n    var searchSplit = searchTerm.replace(/ /g, \"'):containsi('\")\n    \n    $.extend($.expr[':'], {\n    'containsi': function(elem, i, match, array)\n      {\n        return (elem.textContent || elem.innerText || '').toLowerCase()\n          .indexOf((match[3] || \"\").toLowerCase()) >= 0;\n      }\n    });\n    \n    \n    $(\"#list li\").not(\":containsi('\" + searchSplit + \"')\").each(function(e)   {\n      $(this).addClass('hiding out').removeClass('in');\n      setTimeout(function() {\n          $('.out').addClass('hidden');\n        }, 300);\n    });\n    \n    $(\"#list li:containsi('\" + searchSplit + \"')\").each(function(e) {\n      $(this).removeClass('hidden out').addClass('in');\n      setTimeout(function() {\n          $('.in').removeClass('hiding');\n        }, 1);\n    });\n    \n  \n      var jobCount = $('#list .in').length;\n    $('.list-count').text(jobCount + ' items');\n    \n    if(jobCount == '0') {\n      $('#list').addClass('empty');\n    }\n    else {\n      $('#list').removeClass('empty');\n    }\n    \n  });\n    \n});",
     "output": "str",
-    "x": 510,
+    "x": 590,
     "y": 40,
     "wires": [
       [
@@ -1098,7 +1098,7 @@
     "syntax": "plain",
     "template": ".list-wrap label {\n  float:left;\n  color:#00BDE8;\n}\n\n.list-count {\n  float:left;\n  text-align:center;\n  width:30%;\n  padding:0.5em;\n  color:#ddd;\n}\n\nli {\n  transition-property: margin, background-color, border-color;\n  transition-duration: .4s, .2s, .2s;\n  transition-timing-function: ease-in-out, ease, ease;\n}\n\n.empty-item {\n  transition-property: opacity;\n  transition-duration: 0s;\n  transition-delay: 0s;\n  transition-timing-function: ease;\n}\n\n.empty .empty-item {\n  transition-property: opacity;\n  transition-duration: .2s;\n  transition-delay: .3s;\n  transition-timing-function: ease;\n}\n\n.hiding {\n  margin-left:-100%;\n  opacity:0.5;\n}\n\n.hidden {\n  display:none;\n}\n\nul {\n  float:left;\n  width:100%;\n  margin:2em 0;\n  padding:0;\n  position:relative;\n}\n\nul:before {\n  content:'desserts';\n  position:absolute;\n  left:-2.8em;\n  font-size:3em;\n  text-align:right;\n  top:1.5em;\n  color:#ededed;\n  font-weight:bold;\n  transform:rotate(-90deg);\n}\n\nli {\n  float:left;\n  clear:left;\n  width:100%;\n  margin:0.2em 0;\n  padding:0.5em 0.8em;\n  list-style:none;\n  background-color:#f2f2f2;\n  border-left:5px solid #003842;\n  cursor:pointer;\n  color:#333;\n  position:relative;\n  z-index:2;\n}\n\nli:hover {\n  background-color:#f9f9f9;\n  border-color:#00BDE8;\n}\n\n.empty-item {\n  background:#fff;\n  color:#ddd;\n  margin:0.2em 0;\n  padding:0.5em 0.8em;\n  font-style:italic;\n  border:none;\n  text-align:center;\n  visibility:hidden;\n  opacity:0;\n  float:left;\n  clear:left;\n  width:100%;\n}\n\n.empty .empty-item {\n  opacity:1;\n  visibility:visible;\n}",
     "output": "str",
-    "x": 510,
+    "x": 590,
     "y": 80,
     "wires": [
       [
@@ -1115,9 +1115,9 @@
     "fieldType": "msg",
     "format": "html",
     "syntax": "mustache",
-    "template": "<html>\n  <head>\n    <title>Supermarket Manager</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n  </head>\n <body> \n    <h1>Supermarket Manager</h1>\n\n<div>\n  <form method=\"post\" action=\"/{{url}}\" ajax=\"true\">\n    <input type=\"text\" name=\"id\" placeholder=\"Product ID\">\n    <input type=\"number\" name=\"price\" placeholder=\"Price\" step=\"0.01\">\n    <input type=\"submit\" value=\"Submit\">\n  </form>\n</div>\n<div class=\"output-div\">\n    <span class=\"feedback-output\" id=\"result\"></span>\n</div>\n<br>\n<input type=\"text\" id=\"search-text\" placeholder=\"search\" class=\"search-box\">\n<br>\n<ul id=\"list\">\n    <li class=\"in\">\n        Id: 1, Title: Pancetta, Original Price: 13,00€, Discount Price: 13,00\n    </li>\n</ul>\n\n</body>\n</html>\n<script>{{{payload.script}}}</script>",
+    "template": "<html>\n  <head>\n    <title>Supermarket Manager</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n  </head>\n <body> \n    <h1>Supermarket Manager</h1>\n\n<div>\n  <form method=\"post\" action=\"/{{url}}\" ajax=\"true\">\n    <input type=\"text\" name=\"id\" placeholder=\"Product ID\">\n    <input type=\"number\" name=\"price\" placeholder=\"Price\" step=\"0.01\">\n    <input type=\"submit\" value=\"Submit\">\n  </form>\n</div>\n<div class=\"output-div\">\n    <span class=\"feedback-output\" id=\"result\"></span>\n</div>\n<br>\n<input type=\"text\" id=\"search-text\" placeholder=\"search\" class=\"search-box\">\n<br>\n<ul id=\"list\">\n    {{#products}}\n    <li class=\"in\">\n        Id: {{index}}, \n        Title: {{title}}, \n        Original Price: {{price.original}}{{price.currency}}, \n        Discount Price: {{price.discount}}{{price.currency}}\n    </li>\n    {{/products}}\n</ul>\n\n</body>\n</html>\n<script>{{{payload.script}}}</script>",
     "output": "str",
-    "x": 510,
+    "x": 590,
     "y": 120,
     "wires": [
       [
@@ -1518,8 +1518,8 @@
     "name": "Shelves products collection",
     "collection": "products",
     "operation": "",
-    "x": 500,
-    "y": 30,
+    "x": 460,
+    "y": 60,
     "wires": [
       []
     ]
@@ -1533,7 +1533,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 220,
-    "y": 30,
+    "y": 60,
     "wires": [
       [
         "97983c7e.ee6eb8"
@@ -1545,46 +1545,12 @@
     "type": "subflow:ca9d5af1.bc0ea8",
     "z": "175c22d2.0ef64d",
     "name": "",
-    "x": 320,
-    "y": 200,
+    "x": 260,
+    "y": 40,
     "wires": [
       [
-        "2d0961b.ad0e71e"
+        "62cffaa8.98178c"
       ]
     ]
-  },
-  {
-    "id": "4d4dbdb6.1a0294",
-    "type": "inject",
-    "z": "175c22d2.0ef64d",
-    "name": "",
-    "topic": "",
-    "payload": "",
-    "payloadType": "date",
-    "repeat": "",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "x": 100,
-    "y": 200,
-    "wires": [
-      [
-        "73a34e6c.d68dd"
-      ]
-    ]
-  },
-  {
-    "id": "2d0961b.ad0e71e",
-    "type": "debug",
-    "z": "175c22d2.0ef64d",
-    "name": "",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "x": 540,
-    "y": 200,
-    "wires": []
   }
 ]
