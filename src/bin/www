@@ -33,10 +33,17 @@ for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}_Rem`, new analogicalDevice(`Cart ${i} removed product id`, -1));
 }
 
-const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts);
+const theftProtection = new ioDevice("TheftProtection");
+for (let i = 0; i < 2; i++) {
+    theftProtection.addDevice(`T${i}_Alarm`, new digitalDevice(`Totem ${i} alarm active`, false));
+    theftProtection.addDevice(`T${i}_Detector`, new analogicalDevice(`Totem ${i} detected product id`, -1));
+}
+
+const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts, theftProtection);
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
     new tcpServer(9090, shelves),
-    new tcpServer(9091, shoppingCarts)
+    new tcpServer(9091, shoppingCarts),
+    new tcpServer(9092, theftProtection)
 ).start();
