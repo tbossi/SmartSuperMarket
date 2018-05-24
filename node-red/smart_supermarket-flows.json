@@ -1293,7 +1293,8 @@
     "y": 230,
     "wires": [
       [
-        "ea2da5a4.10451"
+        "ea2da5a4.10451",
+        "8b235d9f.34bc08"
       ]
     ]
   },
@@ -2342,5 +2343,46 @@
         "2987129.e504b6e"
       ]
     ]
+  },
+  {
+    "id": "8b235d9f.34bc08",
+    "type": "subflow:e5049f4c.fd313",
+    "z": "175c22d2.0ef64d",
+    "x": 350,
+    "y": 280,
+    "wires": [
+      [
+        "eacfd7f7.36eca8"
+      ]
+    ]
+  },
+  {
+    "id": "eacfd7f7.36eca8",
+    "type": "function",
+    "z": "175c22d2.0ef64d",
+    "name": "create topic name and message",
+    "func": "var product = msg.payload;\nvar department = product['department']\nmsg.topic = 'clients/' + department;\n\nvar title = product['title'];\nvar newPrice = product['price']['discount'].toFixed(2) + product['price']['currency'];\nmsg.payload = title + \" -> \" + newPrice;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 640,
+    "y": 280,
+    "wires": [
+      [
+        "8ad1213.e73f4e"
+      ]
+    ]
+  },
+  {
+    "id": "8ad1213.e73f4e",
+    "type": "mqtt out",
+    "z": "175c22d2.0ef64d",
+    "name": "",
+    "topic": "",
+    "qos": "",
+    "retain": "",
+    "broker": "6c5f366c.b6c0f8",
+    "x": 860,
+    "y": 280,
+    "wires": []
   }
 ]
