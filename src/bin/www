@@ -34,7 +34,7 @@ for (let i = 0; i < 20; i++) {
 }
 
 const theftProtection = new ioDevice("TheftProtection");
-for (let i = 0; i < 2; i++) {
+for (let i = 1; i <= 2; i++) {
     theftProtection.addDevice(`T${i}_Alarm`, new digitalDevice(`Totem ${i} alarm active`, false));
     theftProtection.addDevice(`T${i}_Detector`, new analogicalDevice(`Totem ${i} detected product id`, -1));
 }

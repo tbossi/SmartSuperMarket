@@ -7,9 +7,9 @@
     "info": "Tutti i flussi riguardanti gli scaffali/banconi:\n\n1) Gestione temperature banco frigo\n2) Gestione prodotti presenti sugli scaffali"
   },
   {
-    "id": "175c22d2.0ef64d",
+    "id": "e2590d70.33a478",
     "type": "tab",
-    "label": "Management Web Form",
+    "label": "Theft Protection Totems",
     "disabled": false,
     "info": ""
   },
@@ -17,6 +17,13 @@
     "id": "186b7a65.42ec46",
     "type": "tab",
     "label": "Carts",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "175c22d2.0ef64d",
+    "type": "tab",
+    "label": "Management Web Form",
     "disabled": false,
     "info": ""
   },
@@ -2016,6 +2023,264 @@
       [
         "bfe31264.184f6"
       ]
+    ]
+  },
+  {
+    "id": "1a5b611c.2e7a7f",
+    "type": "comment",
+    "z": "e2590d70.33a478",
+    "name": "Detect products passing totems",
+    "info": "",
+    "x": 150,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "cf01f67f.eaf79",
+    "type": "inject",
+    "z": "e2590d70.33a478",
+    "name": "Totem check frequence",
+    "topic": "",
+    "payload": "true",
+    "payloadType": "bool",
+    "repeat": "1",
+    "crontab": "",
+    "once": false,
+    "x": 160,
+    "y": 140,
+    "wires": [
+      [
+        "1f5a7a3.729ff06",
+        "43afe96a.53d618"
+      ]
+    ]
+  },
+  {
+    "id": "43afe96a.53d618",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "generate get added request",
+    "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index % 2) + 1;\ncontext.set(\"deviceIndex\", index);\n\nmsg = {};\nmsg.device = \"totem\";\nmsg.deviceId = `T${index}_Detector`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 610,
+    "y": 140,
+    "wires": [
+      [
+        "b4bd9f92.da044"
+      ]
+    ]
+  },
+  {
+    "id": "b4bd9f92.da044",
+    "type": "subflow:9764201b.6e44f8",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "x": 870,
+    "y": 140,
+    "wires": [
+      [
+        "2403a5b4.2e9502"
+      ]
+    ]
+  },
+  {
+    "id": "2403a5b4.2e9502",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "Continue only if a product has passed the totem",
+    "func": "msg.value = parseInt(msg.value);\n\nif (msg.value >= 0) {\n    return msg;\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 250,
+    "y": 270,
+    "wires": [
+      [
+        "c47d782c.809bb8",
+        "b5c2ca67.5c2ad",
+        "a923d40c.4d01f8"
+      ]
+    ]
+  },
+  {
+    "id": "2a6be54f.1d8512",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "reset value",
+    "func": "msg.value = -1;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 710,
+    "y": 270,
+    "wires": [
+      [
+        "e3977844.f45528"
+      ]
+    ]
+  },
+  {
+    "id": "e3977844.f45528",
+    "type": "subflow:75994a9b.4846ac",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "x": 900,
+    "y": 270,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "c47d782c.809bb8",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "Start alarm",
+    "func": "msg.deviceId = msg.deviceId.replace(\"_Detector\", \"_Alarm\");\nmsg.value = true;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 190,
+    "y": 370,
+    "wires": [
+      [
+        "21be7d44.c57562"
+      ]
+    ]
+  },
+  {
+    "id": "1f5a7a3.729ff06",
+    "type": "delay",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "pauseType": "delay",
+    "timeout": "500",
+    "timeoutUnits": "milliseconds",
+    "rate": "1",
+    "nbRateUnits": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "x": 380,
+    "y": 120,
+    "wires": [
+      [
+        "43afe96a.53d618"
+      ]
+    ]
+  },
+  {
+    "id": "21be7d44.c57562",
+    "type": "subflow:75994a9b.4846ac",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "x": 380,
+    "y": 370,
+    "wires": [
+      [
+        "96ecea79.e8749"
+      ]
+    ]
+  },
+  {
+    "id": "e047f585.d7232",
+    "type": "mqtt out",
+    "z": "e2590d70.33a478",
+    "name": "publish thefts",
+    "topic": "",
+    "qos": "2",
+    "retain": "false",
+    "broker": "6c5f366c.b6c0f8",
+    "x": 920,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "b5c2ca67.5c2ad",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "Create topic",
+    "func": "var device = msg.deviceId.replace(\"_Detector\",\"\");\nmsg.topic = `supermarket/alarm/${device}`;\nmsg.payload = `${new Date().toISOString()} - Possible theft on totem ${device}`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 550,
+    "y": 320,
+    "wires": [
+      [
+        "e047f585.d7232"
+      ]
+    ]
+  },
+  {
+    "id": "a923d40c.4d01f8",
+    "type": "delay",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "pauseType": "delay",
+    "timeout": "500",
+    "timeoutUnits": "milliseconds",
+    "rate": "1",
+    "nbRateUnits": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "x": 550,
+    "y": 270,
+    "wires": [
+      [
+        "2a6be54f.1d8512"
+      ]
+    ]
+  },
+  {
+    "id": "96ecea79.e8749",
+    "type": "delay",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "pauseType": "delay",
+    "timeout": "5",
+    "timeoutUnits": "seconds",
+    "rate": "1",
+    "nbRateUnits": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "x": 560,
+    "y": 370,
+    "wires": [
+      [
+        "6633c02e.a92d1"
+      ]
+    ]
+  },
+  {
+    "id": "6633c02e.a92d1",
+    "type": "function",
+    "z": "e2590d70.33a478",
+    "name": "Stop alarm",
+    "func": "msg.value = false;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 710,
+    "y": 370,
+    "wires": [
+      [
+        "4f3cd48e.7603b4"
+      ]
+    ]
+  },
+  {
+    "id": "4f3cd48e.7603b4",
+    "type": "subflow:75994a9b.4846ac",
+    "z": "e2590d70.33a478",
+    "name": "",
+    "x": 900,
+    "y": 370,
+    "wires": [
+      []
     ]
   }
 ]
