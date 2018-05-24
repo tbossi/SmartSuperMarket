@@ -262,6 +262,35 @@
     ]
   },
   {
+    "id": "e5049f4c.fd313",
+    "type": "subflow",
+    "name": "Mongo get product from id",
+    "info": "",
+    "in": [
+      {
+        "x": 40,
+        "y": 20,
+        "wires": [
+          {
+            "id": "5d3b2b89.9533c4"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 640,
+        "y": 20,
+        "wires": [
+          {
+            "id": "2987129.e504b6e",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "dcdbb1c1.7b8b3",
     "type": "ui_base",
     "theme": {
@@ -2281,6 +2310,37 @@
     "y": 370,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "2987129.e504b6e",
+    "type": "mongodb2 in",
+    "z": "e5049f4c.fd313",
+    "service": "_ext_",
+    "configNode": "d8a581dc.b0cfa8",
+    "name": "Shelves products collection",
+    "collection": "products",
+    "operation": "",
+    "x": 460,
+    "y": 60,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "5d3b2b89.9533c4",
+    "type": "function",
+    "z": "e5049f4c.fd313",
+    "name": "find product by id",
+    "func": "msg.operation = \"findOne\"\nvar id = parseInt(msg.payload.id);\nmsg.payload = [\n    {'index': id}, \n    {'_id':false}\n];\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 230,
+    "y": 60,
+    "wires": [
+      [
+        "2987129.e504b6e"
+      ]
     ]
   }
 ]
