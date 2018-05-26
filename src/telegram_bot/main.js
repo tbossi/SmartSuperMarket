@@ -1,6 +1,6 @@
 const smarketbot = require('./telegram_bot');
 
-let bot = new smarketbot();
+let bot = new smarketbot('./token');
 
 setTimeout(
     function(){
