@@ -1,5 +1,12 @@
 const smarketbot = require('./telegram_bot');
 
-var bot = new smarketbot();
+let bot = new smarketbot();
+
+setTimeout(
+    function(){
+        bot.brodcastMessage('ciao a tutti');
+    }
+    , 10*1000
+);
 
 console.log('end');

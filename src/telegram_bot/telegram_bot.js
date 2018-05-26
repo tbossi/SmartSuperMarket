@@ -41,10 +41,10 @@ class smarketbot {
     }
 
     brodcastMessage(message) {
-        arrayOfChat.forEach(function (chatId) {
-                bot.sendMessage(chatId, message);
-            }
-        );
+        for (let i = 0, len = this.arrayOfChat.length; i < len; i++) {
+            let chatId = this.arrayOfChat[i];
+            this.bot.sendMessage(chatId, message);
+        }
     }
 }
 
