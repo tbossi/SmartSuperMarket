@@ -2840,5 +2840,49 @@
         "32f74ac6.c7b38e"
       ]
     ]
+  },
+  {
+    "id": "d09c63e5.457d28",
+    "type": "http in",
+    "z": "186b7a65.42ec46",
+    "name": "Payment handler",
+    "url": "/api/pay",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 110,
+    "y": 1180,
+    "wires": [
+      [
+        "ef63156b.9411b"
+      ]
+    ]
+  },
+  {
+    "id": "96e5c688.6b0a98",
+    "type": "http response",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 710,
+    "y": 1180,
+    "wires": []
+  },
+  {
+    "id": "ef63156b.9411b",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "TODO",
+    "func": "\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 390,
+    "y": 1180,
+    "wires": [
+      [
+        "96e5c688.6b0a98"
+      ]
+    ]
   }
 ]
