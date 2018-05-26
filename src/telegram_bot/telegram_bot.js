@@ -6,11 +6,17 @@ const fs = require('fs');
 
 class smarketbot {
     constructor() {
-        let token = fs.readFileSync('./token').toString();
-        this.bot = new TelegramBot(token, {polling: true});
-        this.arrayOfChat = [];
-        this.setUpSubscribeAction();
-        this.setUpUnsubscribeAction();
+        this.tokenIsNotPresent = ! fs.existsSync('./token');
+        if (this.tokenIsNotPresent) {
+            console.error('The bot can not be created without token');
+        }
+        else{
+            let token = fs.readFileSync('./token').toString();
+            this.bot = new TelegramBot(token, {polling: true});
+            this.arrayOfChat = [];
+            this.setUpSubscribeAction();
+            this.setUpUnsubscribeAction();
+        }
     }
 
     setUpUnsubscribeAction() {
@@ -42,9 +48,14 @@ class smarketbot {
     }
 
     brodcastMessage(message) {
-        for (let i = 0, len = this.arrayOfChat.length; i < len; i++) {
-            let chatId = this.arrayOfChat[i];
-            this.bot.sendMessage(chatId, message);
+        if (this.tokenIsNotPresent) {
+            console.error('The bot can not brodcast a message without token');
+        }
+        else {
+            for (let i = 0, len = this.arrayOfChat.length; i < len; i++) {
+                let chatId = this.arrayOfChat[i];
+                this.bot.sendMessage(chatId, message);
+            }
         }
     }
 }
