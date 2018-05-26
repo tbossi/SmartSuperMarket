@@ -324,6 +324,35 @@
     ]
   },
   {
+    "id": "57de9758.d229e8",
+    "type": "subflow",
+    "name": "Mongo Clear cart",
+    "info": "",
+    "in": [
+      {
+        "x": 100,
+        "y": 100,
+        "wires": [
+          {
+            "id": "84ced47c.f83928"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 580,
+        "y": 100,
+        "wires": [
+          {
+            "id": "8566f294.c7fac8",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "dcdbb1c1.7b8b3",
     "type": "ui_base",
     "theme": {
@@ -472,6 +501,20 @@
     "disp": true,
     "width": "20",
     "collapse": false
+  },
+  {
+    "id": "224bb847.31827",
+    "type": "websocket-listener",
+    "z": "",
+    "path": "/payment",
+    "wholemsg": "false"
+  },
+  {
+    "id": "953677c0.d84808",
+    "type": "websocket-listener",
+    "z": "",
+    "path": "paid",
+    "wholemsg": "false"
   },
   {
     "id": "49992fa3.4072f",
@@ -2496,7 +2539,7 @@
     "name": "",
     "statusCode": "",
     "headers": {},
-    "x": 710,
+    "x": 940,
     "y": 1120,
     "wires": []
   },
@@ -2710,26 +2753,10 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "Compute total price",
-    "func": "var products = msg.payload;\nvar totalPrice = products\n    .filter(product => typeof product.price !== \"undefined\")\n    .map(product => product.amount * product.price.discount)\n    .reduce((acc, cur) => acc + cur, 0);\nvar cart = msg.cart.replace(\"Cart_\",\"\");\n\nmsg.payload = {};\nmsg.payload.products = products;\nmsg.payload.totalPrice = totalPrice;\nmsg.payload.cart = cart;\nreturn msg;",
+    "func": "var products = msg.payload;\nvar totalPrice = products\n    .filter(product => typeof product.price !== \"undefined\")\n    .map(product => product.amount * product.price.discount)\n    .reduce((acc, cur) => acc + cur, 0);\nvar cart = msg.cart.replace(\"Cart_\",\"\");\n\nmsg.payload = {};\nmsg.payload.products = products;\nmsg.payload.totalPrice = totalPrice.toFixed(2);\nmsg.payload.cart = cart;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 180,
-    "y": 1040,
-    "wires": [
-      [
-        "2289c43a.2463ec"
-      ]
-    ]
-  },
-  {
-    "id": "2289c43a.2463ec",
-    "type": "function",
-    "z": "186b7a65.42ec46",
-    "name": "Add payment Url",
-    "func": "msg.url = \"api/pay\";\nmsg.products = msg.payload;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 400,
+    "x": 630,
     "y": 1040,
     "wires": [
       [
@@ -2746,9 +2773,9 @@
     "fieldType": "msg",
     "format": "javascript",
     "syntax": "plain",
-    "template": "$(document).ready(function(e) {\n    $(\"form[ajax=true]\").submit(function(e) {\n        e.preventDefault();\n        var form_data = $(this).serialize();\n        var form_url = $(this).attr(\"action\");\n        var form_method = $(this).attr(\"method\").toUpperCase();\n        $.ajax({\n            url: form_url,\n            type: form_method,\n            data: form_data,\n            cache: false,\n            success: function(returnhtml) {\n                $(\"#result\").html(returnhtml);\n            }\n        });\n    });\n});",
+    "template": "var paymentSocket = new WebSocket(\"ws://localhost:1880/payment\");\nvar paid = new WebSocket(\"ws://localhost:1880/paid\");\n\n$(document).ready(function(e) {\n    $(\"form\").submit(function(e) {\n        e.preventDefault();\n        var form_data =  {\n            cart: $(this).find(\"input[name=cart]\").attr(\"value\"),\n            price: $(this).find(\"input[name=totalPrice]\").attr(\"value\") \n        };\n        \n        paymentSocket.send(JSON.stringify(form_data));\n        $(\".result .waiting\").show();\n    });\n});\n\npaid.onmessage = function (event) {\n    if (event.data === \"OK\") {\n        $(\".result .waiting\").hide();\n        $(\".result .done\").show();\n    }\n}",
     "output": "str",
-    "x": 580,
+    "x": 810,
     "y": 1040,
     "wires": [
       [
@@ -2765,9 +2792,9 @@
     "fieldType": "msg",
     "format": "css",
     "syntax": "plain",
-    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
+    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.result {\n    \n}\n\n.result .waiting, .result .done {\n    display: none;\n    font-size: 2em;\n    text-align: center;\n    padding: 10px;\n    background: white;\n    margin-bottom: 10px;\n    border-radius: 5px;\n    border: 1px solid firebrick;\n}\n.loader {\n    margin: auto;\n    margin-bottom: 20px;\n    border: 10px solid white;\n    border-top: 10px solid firebrick;\n    border-bottom: 10px solid firebrick;\n    border-radius: 50%;\n    width: 40px;\n    height: 40px;\n    animation: spin 2s linear infinite;\n}\n@keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
     "output": "str",
-    "x": 580,
+    "x": 810,
     "y": 1080,
     "wires": [
       [
@@ -2784,9 +2811,9 @@
     "fieldType": "msg",
     "format": "html",
     "syntax": "mustache",
-    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"/{{url}}\" ajax=\"true\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"output-div\">\n            <span class=\"feedback-output\" id=\"result\"></span>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
+    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"#\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"result\">\n            <div class=\"waiting\"><div class=\"loader\"></div>Please use your NFC device to pay</div>\n            <div class=\"done\">Payment accepted</div>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
     "output": "str",
-    "x": 580,
+    "x": 810,
     "y": 1120,
     "wires": [
       [
@@ -2842,16 +2869,58 @@
     ]
   },
   {
-    "id": "d09c63e5.457d28",
-    "type": "http in",
+    "id": "ef63156b.9411b",
+    "type": "function",
     "z": "186b7a65.42ec46",
-    "name": "Payment handler",
-    "url": "/api/pay",
-    "method": "post",
-    "upload": false,
-    "swaggerDoc": "",
-    "x": 110,
-    "y": 1180,
+    "name": "Create and store payment object",
+    "func": "var cart = parseInt(msg.payload.cart);\nvar price = parseFloat(msg.payload.price);\nvar paymentInstance = {\n    cart : cart,\n    price : price,\n    timestamp : new Date()\n};\nflow.set(`pay_${cart}`, paymentInstance);",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 470,
+    "y": 1200,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "cea562f.34e79a",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Complete payment object",
+    "func": "msg.cart = msg.deviceId.replace(\"Cart_\",\"\").replace(\"_NFC\", \"\");\nvar payment = flow.get(`pay_${msg.cart}`);\npayment.from = msg.value;\npayment.to = \"marketPayId\";\n\nmsg.payment = payment;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 430,
+    "y": 1420,
+    "wires": [
+      [
+        "85a34c5.f6490b"
+      ]
+    ]
+  },
+  {
+    "id": "1e2af02c.85a8b8",
+    "type": "websocket in",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "server": "224bb847.31827",
+    "client": "",
+    "x": 100,
+    "y": 1200,
+    "wires": [
+      [
+        "7994dd4.4262824"
+      ]
+    ]
+  },
+  {
+    "id": "7994dd4.4262824",
+    "type": "json",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "pretty": false,
+    "x": 250,
+    "y": 1200,
     "wires": [
       [
         "ef63156b.9411b"
@@ -2859,29 +2928,204 @@
     ]
   },
   {
-    "id": "96e5c688.6b0a98",
-    "type": "http response",
+    "id": "47bad95e.2fa38",
+    "type": "subflow:9cddb094.21ea78",
     "z": "186b7a65.42ec46",
-    "name": "",
-    "statusCode": "",
-    "headers": {},
-    "x": 710,
-    "y": 1180,
-    "wires": []
+    "x": 100,
+    "y": 1280,
+    "wires": [
+      [
+        "4217ec8a.487ae4"
+      ]
+    ]
   },
   {
-    "id": "ef63156b.9411b",
+    "id": "4217ec8a.487ae4",
     "type": "function",
     "z": "186b7a65.42ec46",
-    "name": "TODO",
-    "func": "\nreturn msg;",
+    "name": "check NFC pay",
+    "func": "var indexKey = \"deviceIndex\";\nvar index = context.get(indexKey) || 0;\nindex = (index+1) % 20;\ncontext.set(indexKey, index);\n\nmsg = {};\nmsg.device = \"cart\";\nmsg.deviceId = `Cart_${index}_NFC`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 280,
+    "y": 1280,
+    "wires": [
+      [
+        "e684024b.3890a"
+      ]
+    ]
+  },
+  {
+    "id": "e684024b.3890a",
+    "type": "subflow:9764201b.6e44f8",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "x": 490,
+    "y": 1280,
+    "wires": [
+      [
+        "fa002ae9.62a6b"
+      ]
+    ]
+  },
+  {
+    "id": "fa002ae9.62a6b",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Continue only if paid",
+    "func": "msg.value = parseInt(msg.value);\n\nif (msg.value >= 0) {\n    return msg;\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 180,
+    "y": 1360,
+    "wires": [
+      [
+        "caf26a35.a04e3",
+        "cea562f.34e79a"
+      ]
+    ]
+  },
+  {
+    "id": "caf26a35.a04e3",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "reset value",
+    "func": "msg.value = -1;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 390,
-    "y": 1180,
+    "y": 1360,
     "wires": [
       [
-        "96e5c688.6b0a98"
+        "e8cb8c2a.9881e8"
+      ]
+    ]
+  },
+  {
+    "id": "e8cb8c2a.9881e8",
+    "type": "subflow:75994a9b.4846ac",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "x": 590,
+    "y": 1360,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "6778858d.f89dd4",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "After payment",
+    "func": "flow.set(`pay_${msg.cart}`, undefined);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 1500,
+    "wires": [
+      [
+        "3fe17a43.78f626",
+        "c1152a24.d4f2d8"
+      ]
+    ]
+  },
+  {
+    "id": "85a34c5.f6490b",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "TODO IMPLEMENT PAYMENT SERVER",
+    "func": "\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 780,
+    "y": 1420,
+    "wires": [
+      [
+        "6778858d.f89dd4"
+      ]
+    ]
+  },
+  {
+    "id": "16ceefb6.708bd",
+    "type": "websocket out",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "server": "953677c0.d84808",
+    "client": "",
+    "x": 870,
+    "y": 1500,
+    "wires": []
+  },
+  {
+    "id": "3fe17a43.78f626",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "result message",
+    "func": "msg.payload = \"OK\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 700,
+    "y": 1500,
+    "wires": [
+      [
+        "16ceefb6.708bd"
+      ]
+    ]
+  },
+  {
+    "id": "8566f294.c7fac8",
+    "type": "mongodb2 in",
+    "z": "57de9758.d229e8",
+    "service": "_ext_",
+    "configNode": "d8a581dc.b0cfa8",
+    "name": "Carts collection",
+    "collection": "carts",
+    "operation": "",
+    "x": 430,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "84ced47c.f83928",
+    "type": "function",
+    "z": "57de9758.d229e8",
+    "name": "find cart",
+    "func": "msg.operation = \"remove\";\nmsg.payload = [\n    {\n        cart : msg.cart,\n    }\n];  \nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 240,
+    "y": 100,
+    "wires": [
+      [
+        "8566f294.c7fac8"
+      ]
+    ]
+  },
+  {
+    "id": "c5781cbf.1f936",
+    "type": "subflow:57de9758.d229e8",
+    "z": "186b7a65.42ec46",
+    "x": 850,
+    "y": 1550,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "c1152a24.d4f2d8",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Clear cart",
+    "func": "msg.cart = `Cart_${msg.cart}`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 680,
+    "y": 1550,
+    "wires": [
+      [
+        "c5781cbf.1f936"
       ]
     ]
   }

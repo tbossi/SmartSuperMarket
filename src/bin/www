@@ -33,6 +33,7 @@ for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}`, new positionDevice(`Cart ${i} position`, {x:0, y:0}));
     shoppingCarts.addDevice(`Cart_${i}_Add`, new analogicalDevice(`Cart ${i} added product id`, -1));
     shoppingCarts.addDevice(`Cart_${i}_Rem`, new analogicalDevice(`Cart ${i} removed product id`, -1));
+    shoppingCarts.addDevice(`Cart_${i}_NFC`, new analogicalDevice(`Cart ${i} NFC id`, -1));
 }
 
 const theftProtection = new ioDevice("TheftProtection");
