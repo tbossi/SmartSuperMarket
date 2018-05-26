@@ -72,8 +72,32 @@
 Diagrammi UML
 \end_layout
 
-\begin_layout Standard
+\begin_layout Part
+Smarketbot
+\end_layout
 
+\begin_layout Standard
+Per accedere al Smarketbot su telegram bisogna accedere al url 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://t.me/NicTomBot"
+
+\end_inset
+
+ dal proprio dispositivo con installato Telegram.
+ Per iniziare ad utilizzarlo veramente è necessario anche eseguire il server:
+ prima però è necessario creare il file /src/telegram_bot/tocken con all'interno
+ il token delle api di telegram (questo step è necessario perchè essendo
+ il repository pubblico sarebbe un errore condividere il token).
+ 
+\end_layout
+
+\begin_layout Standard
+Quando il server è correttamente running allora dal bot sono possibili due
+ azioni: '/subscribe' con la quale ci si sottoscrive per ottenere informazioni
+ dal bot e '/unsubscribe' con la quale è possibile smettere di ricevere
+ informazioni dal bot.
+ Tutti gli altri messaggi inviati al bot saranno ignorati.
 \end_layout
 
 \begin_layout Part
