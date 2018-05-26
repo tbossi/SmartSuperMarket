@@ -5,14 +5,18 @@ const fs = require('fs');
 
 
 class smarketbot {
-    constructor() {
-        this.tokenIsNotPresent = ! fs.existsSync('./token');
+    constructor(tokenPath) {
+        this.tokenIsNotPresent = ! fs.existsSync(tokenPath);
         if (this.tokenIsNotPresent) {
             console.error('The bot can not be created without token');
         }
         else{
-            let token = fs.readFileSync('./token').toString();
-            this.bot = new TelegramBot(token, {polling: true});
+            let token = fs.readFileSync(tokenPath).toString();
+            let options = {
+                port: 443,
+                polling: true
+            }
+            this.bot = new TelegramBot(token, options);
             this.arrayOfChat = [];
             this.setUpSubscribeAction();
             this.setUpUnsubscribeAction();
@@ -24,7 +28,7 @@ class smarketbot {
             const chatId = msg.chat.id;
             if (this.arrayOfChat.includes(chatId)) {
                 this.arrayOfChat.splice(this.arrayOfChat.indexOf(chatId), 1);
-                console.log(this.arrayOfChat.length);
+                console.log('bot subscribers number: ' + this.arrayOfChat.length);
                 this.bot.sendMessage(chatId, 'Your subscription is removed');
             }
             else {
@@ -41,7 +45,7 @@ class smarketbot {
             }
             else {
                 this.arrayOfChat.push(chatId);
-                console.log(this.arrayOfChat.length);
+                console.log('bot subscribers number: ' + this.arrayOfChat.length);
                 this.bot.sendMessage(chatId, 'Your subscription is accepted');
             }
         });
