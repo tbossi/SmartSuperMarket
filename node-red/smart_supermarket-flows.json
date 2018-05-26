@@ -268,8 +268,8 @@
     "info": "",
     "in": [
       {
-        "x": 40,
-        "y": 20,
+        "x": 70,
+        "y": 70,
         "wires": [
           {
             "id": "5d3b2b89.9533c4"
@@ -279,11 +279,44 @@
     ],
     "out": [
       {
-        "x": 640,
-        "y": 20,
+        "x": 670,
+        "y": 70,
         "wires": [
           {
             "id": "2987129.e504b6e",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "54963c28.722b74",
+    "type": "subflow",
+    "name": "Mongo Get products in cart",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 90,
+        "wires": [
+          {
+            "id": "9c8f8645.4ea7d8"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 990,
+        "y": 70,
+        "wires": [
+          {
+            "id": "b39443e4.88fb58",
+            "port": 0
+          },
+          {
+            "id": "ec624000.a5d6f",
             "port": 0
           }
         ]
@@ -1173,7 +1206,7 @@
     "name": "HTTP response",
     "statusCode": "",
     "headers": {},
-    "x": 810,
+    "x": 930,
     "y": 230,
     "wires": []
   },
@@ -1256,7 +1289,7 @@
     "z": "175c22d2.0ef64d",
     "name": "",
     "pretty": false,
-    "x": 480,
+    "x": 590,
     "y": 230,
     "wires": [
       [
@@ -1272,7 +1305,7 @@
     "func": "msg.payload = 'Data correcly transmitted: '+msg.payload;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 630,
+    "x": 750,
     "y": 230,
     "wires": [
       [
@@ -1294,7 +1327,7 @@
     "wires": [
       [
         "ea2da5a4.10451",
-        "8b235d9f.34bc08"
+        "792be230.24e5e4"
       ]
     ]
   },
@@ -1533,7 +1566,7 @@
     "type": "subflow:6306fa17.2370dc",
     "z": "175c22d2.0ef64d",
     "name": "",
-    "x": 310,
+    "x": 410,
     "y": 230,
     "wires": [
       [
@@ -2322,8 +2355,8 @@
     "name": "Shelves products collection",
     "collection": "products",
     "operation": "",
-    "x": 460,
-    "y": 60,
+    "x": 470,
+    "y": 70,
     "wires": [
       []
     ]
@@ -2333,11 +2366,11 @@
     "type": "function",
     "z": "e5049f4c.fd313",
     "name": "find product by id",
-    "func": "msg.operation = \"findOne\"\nvar id = parseInt(msg.payload.id);\nmsg.updatedPrice = parseFloat(msg.payload.price);\nmsg.payload = [\n    {'index': id}, \n    {'_id':false}\n];\nreturn msg;",
+    "func": "msg.operation = \"findOne\"\nvar id = parseInt(msg.payload.id);\nmsg.payload = [\n    {'index': id}, \n    {'_id':false}\n];\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 230,
-    "y": 60,
+    "x": 220,
+    "y": 70,
     "wires": [
       [
         "2987129.e504b6e"
@@ -2348,8 +2381,9 @@
     "id": "8b235d9f.34bc08",
     "type": "subflow:e5049f4c.fd313",
     "z": "175c22d2.0ef64d",
-    "x": 350,
-    "y": 280,
+    "name": "",
+    "x": 470,
+    "y": 290,
     "wires": [
       [
         "eacfd7f7.36eca8"
@@ -2364,8 +2398,8 @@
     "func": "var product = msg.payload;\nvar department = product['department']\nmsg.topic = 'clients/' + department;\n\nvar title = product['title'];\nvar newPrice = msg.updatedPrice.toFixed(2) + product['price']['currency'];\nmsg.payload = title + \" -> \" + newPrice;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 640,
-    "y": 280,
+    "x": 750,
+    "y": 290,
     "wires": [
       [
         "8ad1213.e73f4e"
@@ -2381,8 +2415,474 @@
     "qos": "",
     "retain": "",
     "broker": "6c5f366c.b6c0f8",
-    "x": 860,
-    "y": 280,
+    "x": 960,
+    "y": 290,
     "wires": []
+  },
+  {
+    "id": "891a94e2.4392a",
+    "type": "comment",
+    "z": "186b7a65.42ec46",
+    "name": "Payment screen",
+    "info": "",
+    "x": 110,
+    "y": 850,
+    "wires": []
+  },
+  {
+    "id": "fe0222c9.71f7e8",
+    "type": "http in",
+    "z": "186b7a65.42ec46",
+    "name": "Get products in cart",
+    "url": "/cart/:cart",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 120,
+    "y": 940,
+    "wires": [
+      [
+        "3ea67974.a062ce"
+      ]
+    ]
+  },
+  {
+    "id": "3ea67974.a062ce",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Check cart id",
+    "func": "var cart = parseInt(msg.req.params.cart);\nmsg.wrongId = isNaN(cart) || cart < 0 || cart > 20;\nmsg.cart = cart;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 310,
+    "y": 940,
+    "wires": [
+      [
+        "746a5c6a.81aecc"
+      ]
+    ]
+  },
+  {
+    "id": "32f74ac6.c7b38e",
+    "type": "http response",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "statusCode": "404",
+    "headers": {},
+    "x": 720,
+    "y": 910,
+    "wires": []
+  },
+  {
+    "id": "e6de9755.a7b94",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "generate operation",
+    "func": "msg.cart = `Cart_${msg.cart}`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 970,
+    "wires": [
+      [
+        "c62a367e.c72668"
+      ]
+    ]
+  },
+  {
+    "id": "bba200a8.a8a65",
+    "type": "http response",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 710,
+    "y": 1120,
+    "wires": []
+  },
+  {
+    "id": "97f5cd3d.99b9a8",
+    "type": "mongodb2 in",
+    "z": "54963c28.722b74",
+    "service": "_ext_",
+    "configNode": "d8a581dc.b0cfa8",
+    "name": "Carts collection",
+    "collection": "carts",
+    "operation": "",
+    "x": 310,
+    "y": 90,
+    "wires": [
+      [
+        "837d76c6.49a3f"
+      ]
+    ]
+  },
+  {
+    "id": "9c8f8645.4ea7d8",
+    "type": "function",
+    "z": "54963c28.722b74",
+    "name": "find cart",
+    "func": "msg.operation = \"findOne\";\nmsg.payload = [\n    {\n        cart : msg.cart,\n    }, {\n        _id : 0\n    }\n];  \nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 150,
+    "y": 90,
+    "wires": [
+      [
+        "97f5cd3d.99b9a8"
+      ]
+    ]
+  },
+  {
+    "id": "c62a367e.c72668",
+    "type": "subflow:54963c28.722b74",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "x": 860,
+    "y": 970,
+    "wires": [
+      [
+        "f7aba048.0fdbd"
+      ]
+    ]
+  },
+  {
+    "id": "792be230.24e5e4",
+    "type": "function",
+    "z": "175c22d2.0ef64d",
+    "name": "Save updated price",
+    "func": "msg.updatedPrice = parseFloat(msg.payload.price);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 240,
+    "y": 290,
+    "wires": [
+      [
+        "8b235d9f.34bc08"
+      ]
+    ]
+  },
+  {
+    "id": "79cfec58.cfc6a4",
+    "type": "function",
+    "z": "54963c28.722b74",
+    "name": "Extract product ids",
+    "func": "msg.payload = msg.payload.products;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 110,
+    "wires": [
+      [
+        "698d16a4.12e9c"
+      ]
+    ]
+  },
+  {
+    "id": "698d16a4.12e9c",
+    "type": "split",
+    "z": "54963c28.722b74",
+    "name": "",
+    "splt": "\\n",
+    "spltType": "str",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "stream": false,
+    "addname": "",
+    "x": 780,
+    "y": 110,
+    "wires": [
+      [
+        "ad6e9522.278b68"
+      ]
+    ]
+  },
+  {
+    "id": "e63f08c6.48cdc8",
+    "type": "subflow:e5049f4c.fd313",
+    "z": "54963c28.722b74",
+    "name": "",
+    "x": 380,
+    "y": 210,
+    "wires": [
+      [
+        "ace5214c.8619b8"
+      ]
+    ]
+  },
+  {
+    "id": "ad6e9522.278b68",
+    "type": "function",
+    "z": "54963c28.722b74",
+    "name": "Save amount",
+    "func": "msg.amount = msg.payload.amount;\nmsg.payload.id = msg.payload.index;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 160,
+    "y": 210,
+    "wires": [
+      [
+        "e63f08c6.48cdc8"
+      ]
+    ]
+  },
+  {
+    "id": "ace5214c.8619b8",
+    "type": "function",
+    "z": "54963c28.722b74",
+    "name": "Restore amount",
+    "func": "if (msg.payload === null) {\n    msg.payload = {};\n}\nmsg.payload.amount = msg.amount;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 600,
+    "y": 210,
+    "wires": [
+      [
+        "b39443e4.88fb58"
+      ]
+    ]
+  },
+  {
+    "id": "b39443e4.88fb58",
+    "type": "join",
+    "z": "54963c28.722b74",
+    "name": "",
+    "mode": "auto",
+    "build": "string",
+    "property": "payload",
+    "propertyType": "msg",
+    "key": "topic",
+    "joiner": "\\n",
+    "joinerType": "str",
+    "accumulate": "false",
+    "timeout": "",
+    "count": "",
+    "x": 780,
+    "y": 210,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "837d76c6.49a3f",
+    "type": "switch",
+    "z": "54963c28.722b74",
+    "name": "",
+    "property": "payload",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "null"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "true",
+    "outputs": 2,
+    "x": 460,
+    "y": 90,
+    "wires": [
+      [
+        "ec624000.a5d6f"
+      ],
+      [
+        "79cfec58.cfc6a4"
+      ]
+    ]
+  },
+  {
+    "id": "ec624000.a5d6f",
+    "type": "function",
+    "z": "54963c28.722b74",
+    "name": "Empty result",
+    "func": "msg.payload = [];\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 600,
+    "y": 70,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "f7aba048.0fdbd",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Compute total price",
+    "func": "var products = msg.payload;\nvar totalPrice = products\n    .filter(product => typeof product.price !== \"undefined\")\n    .map(product => product.amount * product.price.discount)\n    .reduce((acc, cur) => acc + cur, 0);\nvar cart = msg.cart.replace(\"Cart_\",\"\");\n\nmsg.payload = {};\nmsg.payload.products = products;\nmsg.payload.totalPrice = totalPrice;\nmsg.payload.cart = cart;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 180,
+    "y": 1040,
+    "wires": [
+      [
+        "2289c43a.2463ec"
+      ]
+    ]
+  },
+  {
+    "id": "2289c43a.2463ec",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Add payment Url",
+    "func": "msg.url = \"api/pay\";\nmsg.products = msg.payload;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 1040,
+    "wires": [
+      [
+        "68fb2f30.82ce38"
+      ]
+    ]
+  },
+  {
+    "id": "68fb2f30.82ce38",
+    "type": "template",
+    "z": "186b7a65.42ec46",
+    "name": "js",
+    "field": "payload.script",
+    "fieldType": "msg",
+    "format": "javascript",
+    "syntax": "plain",
+    "template": "$(document).ready(function(e) {\n    $(\"form[ajax=true]\").submit(function(e) {\n        e.preventDefault();\n        var form_data = $(this).serialize();\n        var form_url = $(this).attr(\"action\");\n        var form_method = $(this).attr(\"method\").toUpperCase();\n        $.ajax({\n            url: form_url,\n            type: form_method,\n            data: form_data,\n            cache: false,\n            success: function(returnhtml) {\n                $(\"#result\").html(returnhtml);\n            }\n        });\n    });\n});",
+    "output": "str",
+    "x": 580,
+    "y": 1040,
+    "wires": [
+      [
+        "6b4d6128.e2cfc8"
+      ]
+    ]
+  },
+  {
+    "id": "6b4d6128.e2cfc8",
+    "type": "template",
+    "z": "186b7a65.42ec46",
+    "name": "css",
+    "field": "payload.style",
+    "fieldType": "msg",
+    "format": "css",
+    "syntax": "plain",
+    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
+    "output": "str",
+    "x": 580,
+    "y": 1080,
+    "wires": [
+      [
+        "bcc5c544.5dbb98"
+      ]
+    ]
+  },
+  {
+    "id": "bcc5c544.5dbb98",
+    "type": "template",
+    "z": "186b7a65.42ec46",
+    "name": "html",
+    "field": "payload",
+    "fieldType": "msg",
+    "format": "html",
+    "syntax": "mustache",
+    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"/{{url}}\" ajax=\"true\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"output-div\">\n            <span class=\"feedback-output\" id=\"result\"></span>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
+    "output": "str",
+    "x": 580,
+    "y": 1120,
+    "wires": [
+      [
+        "bba200a8.a8a65"
+      ]
+    ]
+  },
+  {
+    "id": "746a5c6a.81aecc",
+    "type": "switch",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "property": "wrongId",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "true"
+      },
+      {
+        "t": "false"
+      }
+    ],
+    "checkall": "true",
+    "outputs": 2,
+    "x": 460,
+    "y": 940,
+    "wires": [
+      [
+        "c45431a2.fbdb58"
+      ],
+      [
+        "e6de9755.a7b94"
+      ]
+    ]
+  },
+  {
+    "id": "c45431a2.fbdb58",
+    "type": "template",
+    "z": "186b7a65.42ec46",
+    "name": "html",
+    "field": "payload",
+    "fieldType": "msg",
+    "format": "html",
+    "syntax": "mustache",
+    "template": "<html>\n<head>\n    <title>Error 404</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n</head>\n<body>\n    <h1>Error 404 - Cart not found</h1>\n</body>\n</html>",
+    "output": "str",
+    "x": 580,
+    "y": 910,
+    "wires": [
+      [
+        "32f74ac6.c7b38e"
+      ]
+    ]
+  },
+  {
+    "id": "d09c63e5.457d28",
+    "type": "http in",
+    "z": "186b7a65.42ec46",
+    "name": "Payment handler",
+    "url": "/api/pay",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 110,
+    "y": 1180,
+    "wires": [
+      [
+        "ef63156b.9411b"
+      ]
+    ]
+  },
+  {
+    "id": "96e5c688.6b0a98",
+    "type": "http response",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 710,
+    "y": 1180,
+    "wires": []
+  },
+  {
+    "id": "ef63156b.9411b",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "TODO",
+    "func": "\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 390,
+    "y": 1180,
+    "wires": [
+      [
+        "96e5c688.6b0a98"
+      ]
+    ]
   }
 ]
