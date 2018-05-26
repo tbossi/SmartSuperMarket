@@ -3,3 +3,6 @@ src/node_modules
 node-red.log
 node-red/.smart_supermarket-flows.json.backup
 dataset/venv
+src/telegram_bot/token
+pre-commit
+manual_save_json
