@@ -31,6 +31,13 @@ bot.onText(/^(\/unsubscribe$)/, (msg, match) => {
     }
 });
 
+function brodcastMessage(message) {
+    arrayOfChat.forEach(function (chatId) {
+            bot.sendMessage(chatId, message);
+        }
+    );
+}
+
 // bot.on('message', (msg) => {
 //     const chatId = msg.chat.id;
 //     bot.sendMessage(chatId, 'Received your message');
