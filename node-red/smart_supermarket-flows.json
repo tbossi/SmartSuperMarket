@@ -353,6 +353,49 @@
     ]
   },
   {
+    "id": "5017d848.b117",
+    "type": "subflow",
+    "name": "TCP fake payment",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 120,
+        "wires": [
+          {
+            "id": "e943218.e421ee"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 830,
+        "y": 170,
+        "wires": [
+          {
+            "id": "4a7fc54d.806bd4",
+            "port": 0
+          }
+        ]
+      },
+      {
+        "x": 830,
+        "y": 230,
+        "wires": [
+          {
+            "id": "4a7fc54d.806bd4",
+            "port": 1
+          },
+          {
+            "id": "d82322c0.ae009",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "dcdbb1c1.7b8b3",
     "type": "ui_base",
     "theme": {
@@ -2773,7 +2816,7 @@
     "fieldType": "msg",
     "format": "javascript",
     "syntax": "plain",
-    "template": "var paymentSocket = new WebSocket(\"ws://localhost:1880/payment\");\nvar paid = new WebSocket(\"ws://localhost:1880/paid\");\n\n$(document).ready(function(e) {\n    $(\"form\").submit(function(e) {\n        e.preventDefault();\n        var form_data =  {\n            cart: $(this).find(\"input[name=cart]\").attr(\"value\"),\n            price: $(this).find(\"input[name=totalPrice]\").attr(\"value\") \n        };\n        \n        paymentSocket.send(JSON.stringify(form_data));\n        $(\".result .waiting\").show();\n    });\n});\n\npaid.onmessage = function (event) {\n    if (event.data === \"OK\") {\n        $(\".result .waiting\").hide();\n        $(\".result .done\").show();\n    }\n}",
+    "template": "var paymentSocket = new WebSocket(\"ws://localhost:1880/payment\");\nvar paid = new WebSocket(\"ws://localhost:1880/paid\");\n\n$(document).ready(function(e) {\n    $(\"form\").submit(function(e) {\n        e.preventDefault();\n        $(\".result .done\").hide();\n        $(\".result .failed\").hide();\n        \n        var form_data =  {\n            cart: $(this).find(\"input[name=cart]\").attr(\"value\"),\n            price: $(this).find(\"input[name=totalPrice]\").attr(\"value\") \n        };\n        \n        paymentSocket.send(JSON.stringify(form_data));\n        $(\".result .waiting\").show();\n    });\n});\n\npaid.onmessage = function (event) {\n    if (event.data === \"OK\") {\n        $(\".result .waiting\").hide();\n        $(\".result .done\").show();\n    } else if (event.data === \"ERROR\") {\n        $(\".result .waiting\").hide();\n        $(\".result .failed\").show();\n    } \n};",
     "output": "str",
     "x": 810,
     "y": 1040,
@@ -2792,7 +2835,7 @@
     "fieldType": "msg",
     "format": "css",
     "syntax": "plain",
-    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.result {\n    \n}\n\n.result .waiting, .result .done {\n    display: none;\n    font-size: 2em;\n    text-align: center;\n    padding: 10px;\n    background: white;\n    margin-bottom: 10px;\n    border-radius: 5px;\n    border: 1px solid firebrick;\n}\n.loader {\n    margin: auto;\n    margin-bottom: 20px;\n    border: 10px solid white;\n    border-top: 10px solid firebrick;\n    border-bottom: 10px solid firebrick;\n    border-radius: 50%;\n    width: 40px;\n    height: 40px;\n    animation: spin 2s linear infinite;\n}\n@keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
+    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.result {\n    \n}\n\n.result .waiting, .result .done, .result .failed {\n    display: none;\n    font-size: 2em;\n    text-align: center;\n    padding: 10px;\n    background: white;\n    margin-bottom: 10px;\n    border-radius: 5px;\n    border: 1px solid firebrick;\n}\n\n.loader {\n    margin: auto;\n    margin-bottom: 20px;\n    border: 10px solid white;\n    border-top: 10px solid firebrick;\n    border-bottom: 10px solid firebrick;\n    border-radius: 50%;\n    width: 40px;\n    height: 40px;\n    animation: spin 2s linear infinite;\n}\n@keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
     "output": "str",
     "x": 810,
     "y": 1080,
@@ -2811,7 +2854,7 @@
     "fieldType": "msg",
     "format": "html",
     "syntax": "mustache",
-    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"#\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"result\">\n            <div class=\"waiting\"><div class=\"loader\"></div>Please use your NFC device to pay</div>\n            <div class=\"done\">Payment accepted</div>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
+    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"#\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"result\">\n            <div class=\"waiting\"><div class=\"loader\"></div>Please use your NFC device to pay.</div>\n            <div class=\"done\">Payment accepted.</div>\n            <div class=\"failed\">Payment failed. Please retry.</div>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
     "output": "str",
     "x": 810,
     "y": 1120,
@@ -2877,7 +2920,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 470,
-    "y": 1200,
+    "y": 1190,
     "wires": [
       []
     ]
@@ -2887,14 +2930,14 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "Complete payment object",
-    "func": "msg.cart = msg.deviceId.replace(\"Cart_\",\"\").replace(\"_NFC\", \"\");\nvar payment = flow.get(`pay_${msg.cart}`);\npayment.from = msg.value;\npayment.to = \"marketPayId\";\n\nmsg.payment = payment;\nreturn msg;",
+    "func": "msg.cart = msg.deviceId.replace(\"Cart_\",\"\").replace(\"_NFC\", \"\");\nvar payment = flow.get(`pay_${msg.cart}`);\n\nif (payment) {\n    payment.from = msg.value;\n    payment.to = \"SuperMarketId\";\n\n    msg.payment = payment;\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
-    "x": 430,
-    "y": 1420,
+    "x": 630,
+    "y": 1380,
     "wires": [
       [
-        "85a34c5.f6490b"
+        "817ce696.899468"
       ]
     ]
   },
@@ -2906,7 +2949,7 @@
     "server": "224bb847.31827",
     "client": "",
     "x": 100,
-    "y": 1200,
+    "y": 1190,
     "wires": [
       [
         "7994dd4.4262824"
@@ -2920,7 +2963,7 @@
     "name": "",
     "pretty": false,
     "x": 250,
-    "y": 1200,
+    "y": 1190,
     "wires": [
       [
         "ef63156b.9411b"
@@ -2932,7 +2975,7 @@
     "type": "subflow:9cddb094.21ea78",
     "z": "186b7a65.42ec46",
     "x": 100,
-    "y": 1280,
+    "y": 1270,
     "wires": [
       [
         "4217ec8a.487ae4"
@@ -2948,7 +2991,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 280,
-    "y": 1280,
+    "y": 1270,
     "wires": [
       [
         "e684024b.3890a"
@@ -2961,7 +3004,7 @@
     "z": "186b7a65.42ec46",
     "name": "",
     "x": 490,
-    "y": 1280,
+    "y": 1270,
     "wires": [
       [
         "fa002ae9.62a6b"
@@ -2976,8 +3019,8 @@
     "func": "msg.value = parseInt(msg.value);\n\nif (msg.value >= 0) {\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
-    "x": 180,
-    "y": 1360,
+    "x": 380,
+    "y": 1340,
     "wires": [
       [
         "caf26a35.a04e3",
@@ -2993,8 +3036,8 @@
     "func": "msg.value = -1;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 390,
-    "y": 1360,
+    "x": 590,
+    "y": 1340,
     "wires": [
       [
         "e8cb8c2a.9881e8"
@@ -3006,8 +3049,8 @@
     "type": "subflow:75994a9b.4846ac",
     "z": "186b7a65.42ec46",
     "name": "",
-    "x": 590,
-    "y": 1360,
+    "x": 790,
+    "y": 1340,
     "wires": [
       []
     ]
@@ -3020,28 +3063,12 @@
     "func": "flow.set(`pay_${msg.cart}`, undefined);\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 400,
-    "y": 1500,
+    "x": 580,
+    "y": 1490,
     "wires": [
       [
         "3fe17a43.78f626",
         "c1152a24.d4f2d8"
-      ]
-    ]
-  },
-  {
-    "id": "85a34c5.f6490b",
-    "type": "function",
-    "z": "186b7a65.42ec46",
-    "name": "TODO IMPLEMENT PAYMENT SERVER",
-    "func": "\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 780,
-    "y": 1420,
-    "wires": [
-      [
-        "6778858d.f89dd4"
       ]
     ]
   },
@@ -3052,8 +3079,8 @@
     "name": "",
     "server": "953677c0.d84808",
     "client": "",
-    "x": 870,
-    "y": 1500,
+    "x": 940,
+    "y": 1520,
     "wires": []
   },
   {
@@ -3064,8 +3091,8 @@
     "func": "msg.payload = \"OK\";\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 700,
-    "y": 1500,
+    "x": 770,
+    "y": 1520,
     "wires": [
       [
         "16ceefb6.708bd"
@@ -3107,8 +3134,8 @@
     "id": "c5781cbf.1f936",
     "type": "subflow:57de9758.d229e8",
     "z": "186b7a65.42ec46",
-    "x": 850,
-    "y": 1550,
+    "x": 920,
+    "y": 1460,
     "wires": [
       []
     ]
@@ -3121,12 +3148,225 @@
     "func": "msg.cart = `Cart_${msg.cart}`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 680,
-    "y": 1550,
+    "x": 750,
+    "y": 1460,
     "wires": [
       [
         "c5781cbf.1f936"
       ]
+    ]
+  },
+  {
+    "id": "817ce696.899468",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "Set payment request",
+    "func": "msg.from = msg.payment.from;\nmsg.to = msg.payment.to;\nmsg.amount = msg.payment.price;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 170,
+    "y": 1520,
+    "wires": [
+      [
+        "28f53890.d78dd8"
+      ]
+    ]
+  },
+  {
+    "id": "69b03baa.647a2c",
+    "type": "function",
+    "z": "5017d848.b117",
+    "name": "extract payment key",
+    "func": "var data = JSON.parse(msg.payload);\nmsg.payload = data;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 550,
+    "y": 200,
+    "wires": [
+      [
+        "4a7fc54d.806bd4"
+      ]
+    ]
+  },
+  {
+    "id": "e943218.e421ee",
+    "type": "function",
+    "z": "5017d848.b117",
+    "name": "create payment info",
+    "func": "msg.payload = JSON.stringify({\n    from : msg.from,\n    to : msg.to,\n    amount : msg.amount,\n    timestamp : new Date()\n});\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 200,
+    "y": 120,
+    "wires": [
+      [
+        "8beaf0a2.b46ec8"
+      ]
+    ]
+  },
+  {
+    "id": "8beaf0a2.b46ec8",
+    "type": "encrypt",
+    "z": "5017d848.b117",
+    "name": "",
+    "algorithm": "AES",
+    "key": "M@rk3tP@ssw0rd",
+    "x": 390,
+    "y": 120,
+    "wires": [
+      [
+        "68cc9e3e.e52058"
+      ]
+    ]
+  },
+  {
+    "id": "68cc9e3e.e52058",
+    "type": "function",
+    "z": "5017d848.b117",
+    "name": "add payment metadata",
+    "func": "var enc = msg.payload;\nmsg.payload = JSON.stringify({\n    request : \"payment\",\n    sender : msg.to,\n    payment : enc\n});\nmsg.port = 10000;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 590,
+    "y": 120,
+    "wires": [
+      [
+        "edb3a46.490ff58"
+      ]
+    ]
+  },
+  {
+    "id": "edb3a46.490ff58",
+    "type": "tcp request",
+    "z": "5017d848.b117",
+    "server": "localhost",
+    "port": "",
+    "out": "char",
+    "splitc": "\\n",
+    "name": "tcp payment request",
+    "x": 830,
+    "y": 120,
+    "wires": [
+      [
+        "de6df31a.8a1c5"
+      ]
+    ]
+  },
+  {
+    "id": "c76ad2a0.f7e26",
+    "type": "decrypt",
+    "z": "5017d848.b117",
+    "name": "",
+    "algorithm": "AES",
+    "key": "M@rk3tP@ssw0rd",
+    "x": 360,
+    "y": 200,
+    "wires": [
+      [
+        "69b03baa.647a2c"
+      ]
+    ]
+  },
+  {
+    "id": "de6df31a.8a1c5",
+    "type": "function",
+    "z": "5017d848.b117",
+    "name": "extract payment key",
+    "func": "var message = JSON.parse(msg.payload.toString());\nmsg.payload = message.payment;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 170,
+    "y": 200,
+    "wires": [
+      [
+        "c76ad2a0.f7e26"
+      ]
+    ]
+  },
+  {
+    "id": "4a7fc54d.806bd4",
+    "type": "switch",
+    "z": "5017d848.b117",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "ok",
+        "vt": "str"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "true",
+    "outputs": 2,
+    "x": 730,
+    "y": 200,
+    "wires": [
+      [],
+      []
+    ]
+  },
+  {
+    "id": "28f53890.d78dd8",
+    "type": "subflow:5017d848.b117",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "x": 380,
+    "y": 1520,
+    "wires": [
+      [
+        "6778858d.f89dd4"
+      ],
+      [
+        "60be53fd.d58f24"
+      ]
+    ]
+  },
+  {
+    "id": "60be53fd.d58f24",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "error message",
+    "func": "msg.payload = \"ERROR\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 770,
+    "y": 1560,
+    "wires": [
+      [
+        "16ceefb6.708bd"
+      ]
+    ]
+  },
+  {
+    "id": "de4df3ea.19416",
+    "type": "catch",
+    "z": "5017d848.b117",
+    "name": "",
+    "scope": null,
+    "x": 530,
+    "y": 260,
+    "wires": [
+      [
+        "d82322c0.ae009"
+      ]
+    ]
+  },
+  {
+    "id": "d82322c0.ae009",
+    "type": "function",
+    "z": "5017d848.b117",
+    "name": "Error message",
+    "func": "msg.payload = {\n    error : \"Unknown error\"\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 700,
+    "y": 260,
+    "wires": [
+      []
     ]
   }
 ]

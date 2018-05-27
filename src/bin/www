@@ -2,6 +2,7 @@
 'use strict';
 const httpServer = require('../servers/http-server');
 const tcpServer = require('../servers/tcp-server');
+const paymentServer = require('../servers/payment-server');
 
 const ioDevice = require('../devices/io-device');
 const digitalDevice = require('../devices/digital-device');
@@ -49,5 +50,7 @@ new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
     new tcpServer(9090, shelves),
     new tcpServer(9091, shoppingCarts),
-    new tcpServer(9092, theftProtection)
+    new tcpServer(9092, theftProtection),
+    // fake payment server
+    new paymentServer(10000),
 ).start();
