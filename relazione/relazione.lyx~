@@ -1841,7 +1841,6 @@ literal "false"
 \begin_inset CommandInset include
 LatexCommand lstinputlisting
 filename "resources/sitemap_il_gigante.json"
-lstparams "language=Java"
 
 \end_inset
 
