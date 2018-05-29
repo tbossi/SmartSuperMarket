@@ -68,7 +68,7 @@ alert "Starting node-red"
 node-red $FLOW_FILE > node-red.log 2>&1 &
 
 alert "Starting $APP_NAME"
-docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT_SHELVES:$TCP_PORT_SHELVES -p $TCP_PORT_CARTS:$TCP_PORT_CARTS -p $TCP_PORT_TOTEMS:$TCP_PORT_TOTEMS -p $TCP_PORT_PAYMENT:$TCP_PORT_PAYMENT --rm -t $APP_NAME &
+docker run --name $APP_NAME -p $HTTP_PORT:$HTTP_PORT -p $TCP_PORT_SHELVES:$TCP_PORT_SHELVES -p $TCP_PORT_CARTS:$TCP_PORT_CARTS -p $TCP_PORT_TOTEMS:$TCP_PORT_TOTEMS -p $TCP_PORT_PAYMENT:$TCP_PORT_PAYMENT -d --rm -t $APP_NAME
 
 firefox -new-tab -url http://localhost:$HTTP_PORT/devices -new-tab -url http://localhost:1880/ui -new-tab -url http://localhost:1880/
 
