@@ -8,6 +8,7 @@ class ioDevice {
     get devicesValues() {
         return {
             name: this.name,
+            port: this.port,
             sensors: Object.keys(this.devices).map(k => {
                 let sensorName = this.devices[k].name;
                 let sensorValue = this.devices[k].value;
@@ -23,7 +24,8 @@ class ioDevice {
         };
     }
 
-    constructor(name) {
+    constructor(name, port) {
+        this.port = port;
         this.name = name;
         this.devices = {};
     }

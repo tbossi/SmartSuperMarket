@@ -3,8 +3,8 @@ const server = require('./server');
 const net = require('net');
 
 class tcpServer extends server {
-    constructor(port, ioDevice) {
-        super(port);
+    constructor(ioDevice) {
+        super(ioDevice.port);
 
         this.server = net.createServer(socket => {
             socket.on('data', data => {

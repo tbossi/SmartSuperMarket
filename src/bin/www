@@ -9,7 +9,7 @@ const digitalDevice = require('../devices/digital-device');
 const analogicalDevice = require('../devices/analogical-device');
 const positionDevice = require('../devices/position-device');
 const smartSupermarket = require('../smart-supermarket');
-const smarketbot = require('../telegram_bot/telegram_bot');
+// const smarketbot = require('../telegram_bot/telegram_bot');
 
 
 class serverContainer {
@@ -22,14 +22,14 @@ class serverContainer {
     }
 }
 
-const shelves = new ioDevice("Shelves");
+const shelves = new ioDevice("Shelves", 9090);
 shelves.addDevice("S1_Temp", new analogicalDevice("Shelf 1 temperature", 4.0));
 for (let i = 1; i <= 5; i++) {
     shelves.addDevice(`S${i}_Add`, new analogicalDevice(`Shelf ${i} added product id`, -1));
     shelves.addDevice(`S${i}_Rem`, new analogicalDevice(`Shelf ${i} removed product id`, -1));
 }
 
-const shoppingCarts = new ioDevice("ShoppingCarts");
+const shoppingCarts = new ioDevice("ShoppingCarts", 9091);
 for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}`, new positionDevice(`Cart ${i} position`, {x:0, y:0}));
     shoppingCarts.addDevice(`Cart_${i}_Add`, new analogicalDevice(`Cart ${i} added product id`, -1));
@@ -37,7 +37,7 @@ for (let i = 0; i < 20; i++) {
     shoppingCarts.addDevice(`Cart_${i}_NFC`, new analogicalDevice(`Cart ${i} NFC id`, -1));
 }
 
-const theftProtection = new ioDevice("TheftProtection");
+const theftProtection = new ioDevice("TheftProtection", 9092);
 for (let i = 1; i <= 2; i++) {
     theftProtection.addDevice(`T${i}_Alarm`, new digitalDevice(`Totem ${i} alarm active`, false));
     theftProtection.addDevice(`T${i}_Detector`, new analogicalDevice(`Totem ${i} detected product id`, -1));
@@ -48,9 +48,9 @@ const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts, theftPr
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
-    new tcpServer(9090, shelves),
-    new tcpServer(9091, shoppingCarts),
-    new tcpServer(9092, theftProtection),
+    new tcpServer(shelves),
+    new tcpServer(shoppingCarts),
+    new tcpServer(theftProtection),
     // fake payment server
     new paymentServer(10000),
 ).start();

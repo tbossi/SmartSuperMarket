@@ -1,8 +1,42 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #f0f0f0;
+  margin: 0 auto; }
 
 a {
   color: #00B7FF; }
+
+.devices-container {
+  display: flex;
+  flex-wrap: wrap; }
+  .devices-container .device {
+    margin: 5px;
+    background: white;
+    border-radius: 5px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid lightgrey; }
+    .devices-container .device h3 {
+      color: firebrick; }
+    .devices-container .device#Shelves .sensors {
+      column-count: 1; }
+    .devices-container .device#ShoppingCarts .sensors {
+      column-count: 2; }
+    .devices-container .device .sensors {
+      column-gap: 40px;
+      column-rule: 1px solid lightgrey; }
+      .devices-container .device .sensors .sensor {
+        width: 380px;
+        padding: 5px 0;
+        box-sizing: border-box;
+        display: flex; }
+        .devices-container .device .sensors .sensor span {
+          font-weight: bold;
+          padding: 1px 4px;
+          border-radius: 2px;
+          margin-left: auto; }
+          .devices-container .device .sensors .sensor span.just-updated {
+            background: orange; }
 
 /*# sourceMappingURL=style.css.map */
