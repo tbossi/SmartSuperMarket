@@ -560,6 +560,13 @@
     "wholemsg": "false"
   },
   {
+    "id": "bf734c7f.84529",
+    "type": "websocket-listener",
+    "z": "",
+    "path": "products",
+    "wholemsg": "false"
+  },
+  {
     "id": "49992fa3.4072f",
     "type": "inject",
     "z": "11b01065.87c36",
@@ -1806,8 +1813,8 @@
     "func": "if (msg.deviceId.indexOf(\"_Add\") >= 0) {\n    msg.cart = msg.deviceId.replace(\"_Add\",\"\");\n    msg.amount = +1;\n    return msg;\n}\n\nif (msg.deviceId.indexOf(\"_Rem\") >= 0) {\n    msg.cart = msg.deviceId.replace(\"_Rem\",\"\");\n    msg.amount = -1;\n    return msg;\n}",
     "outputs": 1,
     "noerr": 0,
-    "x": 610,
-    "y": 760,
+    "x": 200,
+    "y": 770,
     "wires": [
       [
         "86d5aecf.400a58"
@@ -1989,10 +1996,12 @@
     "id": "86d5aecf.400a58",
     "type": "subflow:cc688324.604068",
     "z": "186b7a65.42ec46",
-    "x": 850,
-    "y": 760,
+    "x": 450,
+    "y": 770,
     "wires": [
-      []
+      [
+        "fdd81993.c4071"
+      ]
     ]
   },
   {
@@ -2796,7 +2805,7 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "Compute total price",
-    "func": "var products = msg.payload;\nvar totalPrice = products\n    .filter(product => typeof product.price !== \"undefined\")\n    .map(product => product.amount * product.price.discount)\n    .reduce((acc, cur) => acc + cur, 0);\nvar cart = msg.cart.replace(\"Cart_\",\"\");\n\nmsg.payload = {};\nmsg.payload.products = products;\nmsg.payload.totalPrice = totalPrice.toFixed(2);\nmsg.payload.cart = cart;\nreturn msg;",
+    "func": "var products = msg.payload;\nvar totalPrice = products\n    .filter(product => typeof product.price !== \"undefined\")\n    .map(product => product.amount * product.price.discount)\n    .reduce((acc, cur) => acc + cur, 0);\nvar cart = msg.cart.replace(\"Cart_\",\"\");\n\nmsg.payload = {};\nmsg.payload.products = products;\nmsg.payload.totalPrice = totalPrice.toFixed(2);\nmsg.payload.cart = cart;\n\nflow.set(`cart_${cart}`, msg.payload);\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 630,
@@ -2816,7 +2825,7 @@
     "fieldType": "msg",
     "format": "javascript",
     "syntax": "plain",
-    "template": "var paymentSocket = new WebSocket(\"ws://localhost:1880/payment\");\nvar paid = new WebSocket(\"ws://localhost:1880/paid\");\n\n$(document).ready(function(e) {\n    $(\"form\").submit(function(e) {\n        e.preventDefault();\n        $(\".result .done\").hide();\n        $(\".result .failed\").hide();\n        \n        var form_data =  {\n            cart: $(this).find(\"input[name=cart]\").attr(\"value\"),\n            price: $(this).find(\"input[name=totalPrice]\").attr(\"value\") \n        };\n        \n        paymentSocket.send(JSON.stringify(form_data));\n        $(\".result .waiting\").show();\n    });\n});\n\npaid.onmessage = function (event) {\n    if (event.data === \"OK\") {\n        $(\".result .waiting\").hide();\n        $(\".result .done\").show();\n    } else if (event.data === \"ERROR\") {\n        $(\".result .waiting\").hide();\n        $(\".result .failed\").show();\n    } \n};",
+    "template": "var paymentSocket = new WebSocket(\"ws://localhost:1880/payment\");\nvar paid = new WebSocket(\"ws://localhost:1880/paid\");\nvar products = new WebSocket(\"ws://localhost:1880/products\");\n\n$(document).ready(function(e) {\n    $(\"form\").submit(function(e) {\n        e.preventDefault();\n        $(\".result .done\").hide();\n        $(\".result .failed\").hide();\n        \n        var form_data =  {\n            cart: $(this).find(\"input[name=cart]\").attr(\"value\")\n        };\n        \n        paymentSocket.send(JSON.stringify(form_data));\n        $(\".result .waiting\").show();\n    });\n});\n\npaid.onmessage = function (event) {\n    var data = JSON.parse(event.data);\n    if (data.cart !== $(\"input[name=cart]\").attr(\"value\")) {\n        return;\n    }\n    if (data.result === \"OK\") {\n        $(\".result .waiting\").hide();\n        $(\".result .done\").show();\n        setTimeout(function() {\n            window.location.reload(true);\n        }, 5000);\n    } else if (data.result === \"ERROR\") {\n        $(\".result .waiting\").hide();\n        $(\".result .failed\").show();\n    } \n};\n\nproducts.onmessage = function (event) {\n    var data = JSON.parse(event.data);\n    if (data.cart !== $(\"input[name=cart]\").attr(\"value\")) {\n        return;\n    }\n    \n    if (data.action === \"update\") {\n        window.location.reload(true);\n    }\n};",
     "output": "str",
     "x": 810,
     "y": 1040,
@@ -2835,7 +2844,7 @@
     "fieldType": "msg",
     "format": "css",
     "syntax": "plain",
-    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.result {\n    \n}\n\n.result .waiting, .result .done, .result .failed {\n    display: none;\n    font-size: 2em;\n    text-align: center;\n    padding: 10px;\n    background: white;\n    margin-bottom: 10px;\n    border-radius: 5px;\n    border: 1px solid firebrick;\n}\n\n.loader {\n    margin: auto;\n    margin-bottom: 20px;\n    border: 10px solid white;\n    border-top: 10px solid firebrick;\n    border-bottom: 10px solid firebrick;\n    border-radius: 50%;\n    width: 40px;\n    height: 40px;\n    animation: spin 2s linear infinite;\n}\n@keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
+    "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.total-price {\n    display: inline-block;\n    font-weight: bold;\n    font-size: 1.2em;\n    padding: 0 10px;\n}\n\ninput[type=submit] {\n    display: inline-block;\n    background: white;\n    border: 1px solid firebrick;\n    color: firebrick;\n    font-weight: bold;\n    font-size: 1.2em;\n    padding: 5px 20px;\n    box-sizing: border-box;\n    border-radius: 5px;\n    margin: 5px;\n}\n\ninput[type=submit]:hover:enabled {\n    background: firebrick;\n    color: white;\n}\n\ninput[type=submit]:disabled {\n    border-color: lightgrey;\n    color: lightgrey;\n}\n\n.result .waiting, .result .done, .result .failed {\n    display: none;\n    font-size: 2em;\n    text-align: center;\n    padding: 10px;\n    background: white;\n    margin-bottom: 10px;\n    border-radius: 5px;\n    border: 1px solid firebrick;\n}\n\n.loader {\n    margin: auto;\n    margin-bottom: 20px;\n    border: 10px solid white;\n    border-top: 10px solid firebrick;\n    border-bottom: 10px solid firebrick;\n    border-radius: 50%;\n    width: 40px;\n    height: 40px;\n    animation: spin 2s linear infinite;\n}\n@keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container table {\n    width: 100%;\n    background: white;\n    border: 1px solid lightgrey;\n    border-radius: 5px;\n    padding: 5px;\n}\n.list-container table thead tr {\n    background: firebrick;\n    color: white;\n}\n.list-container table thead tr th {\n    padding: 5px;\n}\n.list-container table tbody tr td {\n    border-bottom: 1px solid lightgrey;\n}\n.list-container table tbody tr td {\n    padding: 5px;\n}\n\n.empty-cart {\n    text-align: center;\n    font-size: 1.5em;\n    padding: 20px !important;\n    font-weight: bold;\n    color: lightgrey;\n}\n\n.product-id {\n    width 50px;\n    text-align: center;\n}\n.product-title {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price, .product-discount {\n    width: 150px;\n}\n\ntbody .product-price, tbody .product-discount {\n    text-align: right;\n}\n.product-amount {\n    width: 100px;\n    text-align: center;\n}",
     "output": "str",
     "x": 810,
     "y": 1080,
@@ -2854,7 +2863,7 @@
     "fieldType": "msg",
     "format": "html",
     "syntax": "mustache",
-    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"#\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"totalPrice\" value=\"{{payload.totalPrice}}\">\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\">\n            </form>\n        </div>\n        <div class=\"result\">\n            <div class=\"waiting\"><div class=\"loader\"></div>Please use your NFC device to pay.</div>\n            <div class=\"done\">Payment accepted.</div>\n            <div class=\"failed\">Payment failed. Please retry.</div>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
+    "template": "<html>\n<head>\n    <title>Products in cart {{payload.cart}}</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Products in cart {{payload.cart}}</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"#\">\n                <div class=\"total-price\">Total: {{payload.totalPrice}} €</div>\n                <input type=\"hidden\" name=\"cart\" value=\"{{payload.cart}}\">\n                <input type=\"submit\" value=\"Buy\"  {{^payload.products}}disabled{{/payload.products}}>\n            </form>\n        </div>\n        <div class=\"result\">\n            <div class=\"waiting\"><div class=\"loader\"></div>Please use your NFC device to pay.</div>\n            <div class=\"done\">Payment accepted.</div>\n            <div class=\"failed\">Payment failed. Please retry.</div>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <table>\n            <thead>\n                <tr>\n                    <th class=\"product-id\">Id</th>\n                    <th class=\"product-title\">Product</th>\n                    <th class=\"product-price\">Full price</th>\n                    <th class=\"product-discount\">Discount price</th>\n                    <th class=\"product-amount\">Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                {{^payload.products}}\n                <tr>\n                    <td colspan=\"5\" class=\"empty-cart\">Your cart is empty</td>\n                </tr>\n                {{/payload.products}}\n                {{#payload.products}}\n                <tr>\n                    <td class=\"product-id\">{{index}}</td>\n                    <td class=\"product-title\">{{title}}</td>\n                    <td class=\"product-price\">{{price.original}} {{price.currency}}</td>\n                    <td class=\"product-discount\">{{price.discount}} {{price.currency}}</td>\n                    <td class=\"product-amount\">{{amount}}</td>\n                </tr>\n                {{/payload.products}}\n            </tbody>\n        </table>\n    </div>\n  </div>\n</body>\n</html>",
     "output": "str",
     "x": 810,
     "y": 1120,
@@ -2916,7 +2925,7 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "Create and store payment object",
-    "func": "var cart = parseInt(msg.payload.cart);\nvar price = parseFloat(msg.payload.price);\nvar paymentInstance = {\n    cart : cart,\n    price : price,\n    timestamp : new Date()\n};\nflow.set(`pay_${cart}`, paymentInstance);",
+    "func": "var cart = parseInt(msg.payload.cart);\n\nvar info = flow.get(`cart_${cart}`);\nif (info) {\n    var paymentInstance = {\n        cart : cart,\n        price : info.totalPrice,\n        timestamp : new Date()\n    };\n    flow.set(`pay_${cart}`, paymentInstance);\n}",
     "outputs": 1,
     "noerr": 0,
     "x": 470,
@@ -3088,7 +3097,7 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "result message",
-    "func": "msg.payload = \"OK\";\nreturn msg;",
+    "func": "msg.payload = {};\nmsg.payload.result = \"OK\";\nmsg.payload.cart = msg.cart;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 770,
@@ -3330,7 +3339,7 @@
     "type": "function",
     "z": "186b7a65.42ec46",
     "name": "error message",
-    "func": "msg.payload = \"ERROR\";\nreturn msg;",
+    "func": "msg.payload = {};\nmsg.payload.result = \"ERROR\";\nmsg.payload.cart = msg.cart;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 770,
@@ -3367,6 +3376,33 @@
     "y": 260,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "3ea6b894.f889d",
+    "type": "websocket out",
+    "z": "186b7a65.42ec46",
+    "name": "",
+    "server": "bf734c7f.84529",
+    "client": "",
+    "x": 900,
+    "y": 770,
+    "wires": []
+  },
+  {
+    "id": "fdd81993.c4071",
+    "type": "function",
+    "z": "186b7a65.42ec46",
+    "name": "update cart screen",
+    "func": "msg.payload = {};\nmsg.payload.action = \"update\";\nmsg.payload.cart = msg.deviceId.replace(\"Cart_\",\"\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 700,
+    "y": 770,
+    "wires": [
+      [
+        "3ea6b894.f889d"
+      ]
     ]
   }
 ]
