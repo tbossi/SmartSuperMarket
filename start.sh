@@ -48,7 +48,7 @@ fi
 
 if ! pgrep -x "dockerd" > /dev/null; then
 	echo "Starting dockerd daemon"
-	dockerd &
+	dockerd --log-level error &
 else
 	echo "dockerd already running"
 fi
