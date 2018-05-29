@@ -5,15 +5,15 @@ block append scripts
     script(src='/scripts/device-updater.js')
 
 block content
-    form
-        select
+    div
+        select(id='sensors-selcet')
             console.log(devices)
             each device in devices
                 optgroup(id= device.port + '')
                     each sensor in device.sensors
                         option=sensor.id
-        input
-        button Submit
+        input(id='set-value-input')
+        button(id='submit-button') Submit
     h1= title
     div(class='devices-container')
         each device in devices
