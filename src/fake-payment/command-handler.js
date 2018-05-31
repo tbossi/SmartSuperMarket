@@ -34,7 +34,9 @@ class commandHandler {
             let account = this.accounts.find(value => value.id === command.sender);
             let decPayInfo = crypto.AES.decrypt(command.payment, account.key).toString(crypto.enc.Utf8);
             let payment = JSON.parse(decPayInfo);
-            payment.result = "ok";
+
+            payment.result = payment.from % 2 === 0 ? "ok" : "failed";
+
             let result = crypto.AES.encrypt(JSON.stringify(payment), account.key).toString();
             return {payment: result};
         } catch (e) {

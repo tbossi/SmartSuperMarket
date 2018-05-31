@@ -4,28 +4,28 @@
     "type": "tab",
     "label": "Shelves",
     "disabled": false,
-    "info": "Tutti i flussi riguardanti gli scaffali/banconi:\n\n1) Gestione temperature banco frigo\n2) Gestione prodotti presenti sugli scaffali"
+    "info": "Tutti i flussi riguardanti gli scaffali/banconi:\n\n1) Gestione temperature banco frigo\n\n2) Gestione prodotti presenti sugli scaffali"
   },
   {
     "id": "e2590d70.33a478",
     "type": "tab",
     "label": "Theft Protection Totems",
     "disabled": false,
-    "info": ""
+    "info": "Tutti i flussi riguardanti i totem antitaccheggio:\n\n1) Rilevamento prodotti non pagati\n\n2) Pubblicazione furto tramite MQTT\n\n3) Azionamento allarme\n"
   },
   {
     "id": "186b7a65.42ec46",
     "type": "tab",
     "label": "Carts",
     "disabled": false,
-    "info": ""
+    "info": "Tutti i flussi riguardanti i carrelli:\n\n1) Tracciamento della posizione dei carrelli per generare una heatmap \n\n2) Gestione dei prodotti inseriti e rimossi dai carrelli\n\n3) Gestione schermo sul carrello con la lista dei prodotti\n\n4) Gestione del pagamento tramite NFC\n"
   },
   {
     "id": "175c22d2.0ef64d",
     "type": "tab",
     "label": "Management Web Form",
     "disabled": false,
-    "info": ""
+    "info": "Tutti i flussi riguardanti la gestione dei prodotti:\n\n1) Form per l'aggiornamento dei prezzi\n\n2) Pubblicazione degli aggiornamenti sui prezzi tramite MQTT"
   },
   {
     "id": "75994a9b.4846ac",
@@ -875,7 +875,7 @@
     "type": "function",
     "z": "11b01065.87c36",
     "name": "Convert result value",
-    "func": "var value = parseFloat(msg.value);\nmsg = {};\nmsg.payload = value;\nreturn msg;",
+    "func": "var value = parseFloat(msg.value);\nmsg.payload = value;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 850,
