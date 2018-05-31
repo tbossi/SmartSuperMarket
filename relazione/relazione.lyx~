@@ -1413,19 +1413,19 @@ noprefix "false"
 \end_inset
 
  sono simulati tramite dei server TCP.
- Nello specifico si tratta di tre server:
+ Nello specifico si tratta di tre server che simulano:
 \end_layout
 
 \begin_layout Enumerate
-quello che simula gli scaffali (in ascolto sulla porta 9090);
+gli scaffali (in ascolto sulla porta 9090);
 \end_layout
 
 \begin_layout Enumerate
-quello che simula i carrelli (in ascolto sulla porta 9091);
+i carrelli (in ascolto sulla porta 9091);
 \end_layout
 
 \begin_layout Enumerate
-quello che simula i totem (in ascolto sulla porta 9092).
+i totem (in ascolto sulla porta 9092).
 \end_layout
 
 \begin_layout Standard
@@ -1651,16 +1651,212 @@ name "subsec:Gestione-pagamenti"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+Al fine di simulare il pagamento tramite NFC, è stato implementato un server
+ a cui connettersi per effettuare la transazione.
+ Tale server comunica in TCP utilizzando messaggi in formato JSON.
+\end_layout
+
+\begin_layout Standard
+Il server accetta messaggi nella forma 
+\begin_inset listings
+lstparams "language=Java"
+inline false
 status open
 
 \begin_layout Plain Layout
-TODO
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+	request : 
+\begin_inset Quotes eld
+\end_inset
+
+payment
+\begin_inset Quotes erd
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Plain Layout
+
+	sender : <senderId>,
+\end_layout
+
+\begin_layout Plain Layout
+
+	payment : <encryptedPayment>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ dove 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<senderId>
+\end_layout
+
+\end_inset
+
+ è l'id di un account registrato sul server, mentre 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<encryptedPayment>
+\end_layout
+
+\end_inset
+
+ è un campo cifrato (con la chiave associata all'account indicato) che contiene
+ le informazioni sulla transazione da effettuare.
+ Il campo payment decifrato è nella forma 
+\begin_inset listings
+lstparams "language=Java"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+	from : <fromId>,
+\end_layout
+
+\begin_layout Plain Layout
+
+	to : <toId>,
+\end_layout
+
+\begin_layout Plain Layout
+
+	amount : <amount>,
+\end_layout
+
+\begin_layout Plain Layout
+
+	timestamp : <timestamp>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ dove 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<fromId>
+\end_layout
+
+\end_inset
+
+ e 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<toId>
+\end_layout
+
+\end_inset
+
+ sono rispettivamente l'id dell'account pagante e pagato, 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<amount>
+\end_layout
+
+\end_inset
+
+ è la somma pagata e 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<timestamp>
+\end_layout
+
+\end_inset
+
+ è la data di pagamento.
+\end_layout
+
+\begin_layout Standard
+Il server risponde con il messaggio 
+\begin_inset listings
+lstparams "language=Java"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+	payment : <encryptedPayment>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+dove 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+<encryptedPayment>
+\end_layout
+
+\end_inset
+
+ è lo stesso campo cifrato illustrato in precedenza, a cui è stato aggiunto
+ un campo 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+result
+\end_layout
+
+\end_inset
+
+ che indica se l'operazione è andata a buon fine.
+\end_layout
+
+\begin_layout Standard
+Allo scopo di semplificare la simulazione, il server ha un comportamento
+ deterministico: se l'id del pagante è un numero pari il pagamento va a
+ buon fine altrimenti fallisce.
 \end_layout
 
 \begin_layout Subsection
@@ -1668,16 +1864,60 @@ MQTT
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+Sono stati definiti alcuni topic MQTT:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
 status open
 
 \begin_layout Plain Layout
-TODO
+supermarket/alert/<Tx>
 \end_layout
 
 \end_inset
 
+: avvisi sui furti rilevati dal totem Tx (dove x è il numero del totem).
+\end_layout
 
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/shelf/S1/temperature
+\end_layout
+
+\end_inset
+
+: informazioni sulla temperatura rilevata nel banco frigo S1.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/product/<Pid>/price
+\end_layout
+
+\end_inset
+
+: notifiche sulla variazione di prezzo del prodotto Pid.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/product/<Pid>/availability/<Sx>
+\end_layout
+
+\end_inset
+
+: notifiche sulla variazione di disponibilità del prodotto Pid (dove Pid
+ indica l'id del prodotto) nello scaffale Sx (dove x è il numero dello scaffale).
 \end_layout
 
 \begin_layout Part
@@ -1695,6 +1935,54 @@ Aggiungere i vari activity diagram
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Scaffali
+\end_layout
+
+\begin_layout Subsection
+Controllo della temperatura
+\end_layout
+
+\begin_layout Subsection
+Aggiunta e rimozione dei prodotti 
+\end_layout
+
+\begin_layout Section
+Totem
+\end_layout
+
+\begin_layout Subsection
+Rilevazione prodotti rubati
+\end_layout
+
+\begin_layout Section
+Carrelli
+\end_layout
+
+\begin_layout Subsection
+Creazione mappa con la posizione dei carrelli
+\end_layout
+
+\begin_layout Subsection
+Aggiunta e rimozione dei prodotti
+\end_layout
+
+\begin_layout Subsection
+Gestione dello schermo con la lista prodotti
+\end_layout
+
+\begin_layout Subsection
+Gestione del pagamento
+\end_layout
+
+\begin_layout Section
+Gestione prodotti
+\end_layout
+
+\begin_layout Subsection
+Form per l'aggiornamento dei prezzi
 \end_layout
 
 \begin_layout Part
@@ -1739,10 +2027,7 @@ noprefix "false"
 
 \begin_layout Standard
 La versione di node.js utilizzata è la 9.11.1.
- Per evitare incompatibilità con node-red (che utilizza una versione di
- node.js più vecchia), i server sono stati isolati in un container docker
- che espone solo le porte indicate in precedenza.
- Per l'esecuzione dei server si rimanda alla sezione 
+ Per l'esecuzione del progetto si rimanda alla sezione 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Come-eseguire-il"
@@ -1841,6 +2126,7 @@ literal "false"
 \begin_inset CommandInset include
 LatexCommand lstinputlisting
 filename "resources/sitemap_il_gigante.json"
+lstparams "language=Java"
 
 \end_inset
 
@@ -1863,7 +2149,17 @@ Successivamente con uno script python abbiamo trasformato il prodotto del
 \begin_inset Quotes eld
 \end_inset
 
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
 discount
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -1871,7 +2167,17 @@ discount
 \begin_inset Quotes eld
 \end_inset
 
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
 availability
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -1890,25 +2196,47 @@ name "sec:Come-eseguire-il"
 \end_layout
 
 \begin_layout Standard
-Una volta clonato il repository (
-\begin_inset CommandInset href
-LatexCommand href
-target "https://github.com/tbossi/SmartSuperMarket.git"
-literal "false"
+Per eseguire il progetto è sufficiente lanciare lo script 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+start.sh
+\end_layout
 
 \end_inset
 
-) se ci si trova sulla macchina virtuale con ubuntu utilizzata a lezione
- basta eseguire da riga di comando nella cartella del progetto il comando
- ./start.sh; se invece si desidera eseguire il progetto su un altro supporto
- è necessario andare nella cartella src/ ed eseguire i comandi: npm install
- ed npm start.
+ presente nella cartella principale del progetto.
+ Questo script fa partire i server e Node-RED, inserisce il dataset in MongoDB
+ ed apre firefox con le pagine principali.
 \end_layout
 
 \begin_layout Standard
-In entrambe le opzioni per poter far funzionare il bot di telegram è necessario
- creare il file /src/telegram_bot/tocken con all'interno il token delle
- api di telegram.
+Per evitare incompatibilità con Node-RED (che utilizza una versione di node.js
+ più vecchia), i server sono stati isolati in un container docker che espone
+ solo le porte indicate in precedenza.
+ Per questo, lo script, prima di far partire i server, si occupa di scaricare
+ ed installare Docker se non è già presente sul sistema e di costruire il
+ container.
+ Questa modalità di esecuzione è stata testata sulla macchina virtuale con
+ ubuntu utilizzata a lezione.
+\end_layout
+
+\begin_layout Standard
+Se invece si desidera eseguire il progetto su un altro supporto è possibile
+ provare ad eseguire lo script aggiungendo l'argomento 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+--no-docker
+\end_layout
+
+\end_inset
+
+.
+ Perché tale modalità funzioni correttamente è necessario che sul sistema
+ sia installata l'ultima versione di node.js.
 \end_layout
 
 \end_body
