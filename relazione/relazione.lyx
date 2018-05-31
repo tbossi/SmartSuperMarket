@@ -141,6 +141,7 @@ Agli ingressi/uscite sono presenti dei totem antitaccheggio che rilevano
 \begin_inset Graphics
 	filename diagram/UseCase.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -1372,6 +1373,7 @@ Cart_x_NFC
 \begin_inset Graphics
 	filename diagram/Class Diagram.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -1948,6 +1950,7 @@ Controllo della temperatura
 \begin_inset Graphics
 	filename diagram/SequenceDiagramChangeTemperature.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -1962,6 +1965,7 @@ Aggiunta e rimozione dei prodotti
 \begin_inset Graphics
 	filename diagram/SequenceDiagramShelvesManagement.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -1980,6 +1984,7 @@ Rilevazione prodotti rubati
 \begin_inset Graphics
 	filename diagram/SequenceDiagramTheftProtection.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -1998,6 +2003,7 @@ Creazione mappa con la posizione dei carrelli
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdateCartChats.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -2008,6 +2014,7 @@ Creazione mappa con la posizione dei carrelli
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdateCartPosition.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -2022,6 +2029,7 @@ Aggiunta e rimozione dei prodotti
 \begin_inset Graphics
 	filename diagram/SequenceDiagramAddOrRemoveProductFromCart
 	display false
+	scale 50
 
 \end_inset
 
@@ -2040,6 +2048,7 @@ Gestione del pagamento
 \begin_inset Graphics
 	filename diagram/SequenceDiagramPay.png
 	display false
+	scale 50
 
 \end_inset
 
@@ -2058,6 +2067,7 @@ Form per l'aggiornamento dei prezzi
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdatePrice.png
 	display false
+	scale 50
 
 \end_inset
 
