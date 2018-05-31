@@ -2498,7 +2498,8 @@
     "y": 310,
     "wires": [
       [
-        "8ad1213.e73f4e"
+        "8ad1213.e73f4e",
+        "4e6d9dad.320654"
       ]
     ]
   },
@@ -3432,6 +3433,36 @@
     "wires": [
       [
         "ba514842.ae2ef"
+      ]
+    ]
+  },
+  {
+    "id": "b325e114.ee27b8",
+    "type": "http request",
+    "z": "175c22d2.0ef64d",
+    "name": "",
+    "method": "POST",
+    "ret": "txt",
+    "url": "http://127.0.0.1:8081/",
+    "tls": "",
+    "x": 1110,
+    "y": 380,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "4e6d9dad.320654",
+    "type": "encrypt",
+    "z": "175c22d2.0ef64d",
+    "name": "",
+    "algorithm": "AES",
+    "key": "password",
+    "x": 940,
+    "y": 380,
+    "wires": [
+      [
+        "b325e114.ee27b8"
       ]
     ]
   }
