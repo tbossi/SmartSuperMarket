@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 50px 50px 250px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: rgb(240, 240, 240);
   margin: 0 auto;
@@ -59,61 +59,51 @@ a {
 
 .form {
   position: fixed;
-  right: 45px;
-  top: 45px;
-  border-radius: 5px;
-  background: #FFFFFF;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 15px;
+  width: 300px;
   max-width: 300px;
-  padding: 45px;
   text-align: center;
+  border-radius: 5px;
+  border: 1px solid firebrick;
+  background: #FFFFFF;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 
-  input {
+  input, select {
     border-radius: 5px;
-    font-family: "Roboto", sans-serif;
     outline: 0;
     background: #f2f2f2;
     width: 100%;
-    border: 0;
-    margin: 0 0 15px;
-    padding: 15px;
+    border: 1px solid lightgrey;
+    margin: 0 0 15px 0;
+    padding: 5px;
     box-sizing: border-box;
     font-size: 14px;
   }
 
   select {
-    border-radius: 5px;
     display: block;
-    width: 100%;
-    outline: none;
-    background: #f2f2f2;
-    color: #888888;
     cursor: pointer;
-    z-index: 2;
-    border: none;
-    margin: 0 0 15px;
-    padding: 10px 10px 10px 5px;
     text-overflow: '';
-
-    &:hover {
-        border-color: #cccccc;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    }
   }
-
 
   button {
     border-radius: 5px;
-    font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0;
     background: #4CAF50;
     width: 100%;
-    border: 0;
-    padding: 15px;
-    color: #FFFFFF;
+    border: 1px solid green;
+    padding: 5px;
+    color: white;
     font-size: 14px;
     cursor: pointer;
+    font-weight: bold;
+
     &:hover, &:active, &:focus {
       background: #43A047;
     }

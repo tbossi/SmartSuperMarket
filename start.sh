@@ -47,10 +47,11 @@ if [[ "$DOCKER" == true && $EUID != 0 ]]; then
 	echo "Running with docker requires admin privileges"
 	if [ ${#SUDO_MODE_OPTIONS[@]} -eq 0 ]; then
 		sudo "$0"
+		exit $?
 	else
 		sudo "$0" "${SUDO_MODE_OPTIONS[*]}"
-	fi
-	exit $?
+		exit $?
+	fi	
 fi
 
 # Variables
