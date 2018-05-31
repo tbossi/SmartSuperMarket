@@ -17,7 +17,7 @@ function router(devices) {
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
         res.header('Expires', '-1');
         res.header('Pragma', 'no-cache');
-        let te = 'SET ' + req.body.id + ' ' + req.body.text;
+        let te = `SET ${req.body.id} ${req.body.text}`;
         let response = devices[parseInt(req.body.devices_id)].onMessage(te);
         res.send(response);
     });
