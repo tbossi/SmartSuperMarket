@@ -863,8 +863,8 @@
       "#c5b0d5"
     ],
     "useOldStyle": false,
-    "x": 960,
-    "y": 230,
+    "x": 990,
+    "y": 120,
     "wires": [
       [],
       []
@@ -882,7 +882,8 @@
     "y": 180,
     "wires": [
       [
-        "68ddd92.8244b28"
+        "68ddd92.8244b28",
+        "8e5c0c47.dcd078"
       ]
     ]
   },
@@ -904,8 +905,8 @@
     "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index % 5) + 1;\ncontext.set(\"deviceIndex\", index);\n\nmsg = {};\nmsg.device = \"shelf\";\nmsg.deviceId = `S${index}_Rem`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 580,
-    "y": 480,
+    "x": 590,
+    "y": 510,
     "wires": [
       [
         "bcff46a7.06c658"
@@ -919,7 +920,7 @@
     "name": "Products in shelves management",
     "info": "",
     "x": 160,
-    "y": 350,
+    "y": 380,
     "wires": []
   },
   {
@@ -965,7 +966,7 @@
     "crontab": "",
     "once": false,
     "x": 160,
-    "y": 440,
+    "y": 470,
     "wires": [
       [
         "d9086e.221b379",
@@ -981,8 +982,8 @@
     "func": "var index = context.get(\"deviceIndex\")||0;\nindex = (index % 5) + 1;\ncontext.set(\"deviceIndex\", index);\n\nmsg = {};\nmsg.device = \"shelf\";\nmsg.deviceId = `S${index}_Add`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 590,
-    "y": 400,
+    "x": 600,
+    "y": 430,
     "wires": [
       [
         "bcff46a7.06c658"
@@ -995,7 +996,7 @@
     "z": "11b01065.87c36",
     "name": "",
     "x": 870,
-    "y": 440,
+    "y": 470,
     "wires": [
       [
         "4963073a.67a6b"
@@ -1011,7 +1012,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 280,
-    "y": 620,
+    "y": 650,
     "wires": [
       [
         "58731525.20ee64",
@@ -1028,7 +1029,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 700,
-    "y": 620,
+    "y": 650,
     "wires": [
       [
         "2384c3ba.cb34dc"
@@ -1041,7 +1042,7 @@
     "z": "11b01065.87c36",
     "name": "",
     "x": 900,
-    "y": 620,
+    "y": 650,
     "wires": [
       []
     ]
@@ -1052,7 +1053,7 @@
     "z": "11b01065.87c36",
     "name": "",
     "x": 470,
-    "y": 690,
+    "y": 720,
     "wires": [
       [
         "9fb89805.ae494"
@@ -1068,7 +1069,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 200,
-    "y": 690,
+    "y": 720,
     "wires": [
       [
         "5dc37461.93b504"
@@ -1228,7 +1229,7 @@
     "randomUnits": "seconds",
     "drop": false,
     "x": 380,
-    "y": 400,
+    "y": 430,
     "wires": [
       [
         "b6f3b481.63c228"
@@ -1245,7 +1246,7 @@
     "retain": "true",
     "broker": "6c5f366c.b6c0f8",
     "x": 910,
-    "y": 690,
+    "y": 720,
     "wires": []
   },
   {
@@ -1253,11 +1254,11 @@
     "type": "function",
     "z": "11b01065.87c36",
     "name": "Create topic",
-    "func": "msg.topic = `supermarket/${msg.value}/availability/${msg.deviceId}`;\nmsg.payload = {\n    product : msg.value,\n    shelf : msg.deviceId,\n    availability : msg.availability\n};\nreturn msg;",
+    "func": "msg.topic = `supermarket/product/${msg.value}/availability/${msg.deviceId}`;\nmsg.payload = `${new Date().toISOString()} - Items available for ${msg.value} in shelf ${msg.deviceId}: ${msg.availability}`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 720,
-    "y": 690,
+    "y": 720,
     "wires": [
       [
         "dbeb271b.500e88"
@@ -1274,7 +1275,7 @@
     "upload": false,
     "swaggerDoc": "",
     "x": 100,
-    "y": 80,
+    "y": 100,
     "wires": [
       [
         "73a34e6c.d68dd"
@@ -1289,7 +1290,7 @@
     "statusCode": "",
     "headers": {},
     "x": 810,
-    "y": 160,
+    "y": 180,
     "wires": []
   },
   {
@@ -1300,7 +1301,7 @@
     "statusCode": "",
     "headers": {},
     "x": 930,
-    "y": 230,
+    "y": 250,
     "wires": []
   },
   {
@@ -1312,7 +1313,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 500,
-    "y": 80,
+    "y": 100,
     "wires": [
       [
         "894cdc9b.6c91c8"
@@ -1331,7 +1332,7 @@
     "template": "$.extend($.expr[':'], {\n    'containsi': function(elem, i, match, array) {\n        return (elem.textContent || elem.innerText || '').toLowerCase()\n            .indexOf((match[3] || \"\").toLowerCase()) >= 0;\n    }\n});\n\n$(document).ready(function(e) {\n    $(\"form[ajax=true]\").submit(function(e) {\n        e.preventDefault(); //disativa azioni di default del bottone\n        var form_data = $(this).serialize(); //crea un json con i dati della form\n        var form_url = $(this).attr(\"action\"); //legge il parametro action\n        var form_method = $(this).attr(\"method\").toUpperCase(); //legge il parametro methos\n        $.ajax({\n            url: form_url,\n            type: form_method,\n            data: form_data,\n            cache: false,\n            success: function(returnhtml) {\n                $(\"#result\").html(returnhtml);\n            }\n        });\n    });\n    \n    $('.list-count').text($('#list .in').length + ' items');\n    $(\"#search-text\").keyup(function () {  \n        var searchTerm = $(\"#search-text\").val();\n        var searchSplit = \":containsi('\" + searchTerm.replace(/ /g, \"'):containsi('\") + \"')\";\n        \n        $(\"#list li\").not(searchSplit).addClass('hidden out').removeClass('in');\n        $(\"#list li\" + searchSplit).removeClass('hidden out').addClass('in');\n  \n        var jobCount = $('#list .in').length;\n        $('.list-count').text(jobCount + ' items');\n    \n        if(jobCount === 0) {\n            $('#list').addClass('empty');\n        } else {\n            $('#list').removeClass('empty');\n        }\n    });\n});",
     "output": "str",
     "x": 650,
-    "y": 80,
+    "y": 100,
     "wires": [
       [
         "cb4b61e3.0dc83"
@@ -1350,7 +1351,7 @@
     "template": "body {\n    margin: 0 auto;\n    height: 100vh;\n    box-sizing: border-box;\n    padding: 50px;\n    font: 16px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n    background: #f0f0f0;\n}\n\n.wrapper {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n}\n\n.list-wrap label {\n  float:left;\n  color:#00BDE8;\n}\n\n.list-count {\n  display: inline-block;\n}\n\nli {\n  transition-property: margin, background-color, border-color;\n  transition-duration: .4s, .2s, .2s;\n  transition-timing-function: ease-in-out, ease, ease;\n}\n\n.empty-item {\n  transition-property: opacity;\n  transition-duration: 0s;\n  transition-delay: 0s;\n  transition-timing-function: ease;\n}\n\n.empty .empty-item {\n  transition-property: opacity;\n  transition-duration: .2s;\n  transition-delay: .3s;\n  transition-timing-function: ease;\n}\n\n.hiding {\n  margin-left:-100%;\n  opacity:0.5;\n}\n\n.hidden {\n  display:none;\n}\n\n.form-container {\n  box-sizing: border-box;\n}\n\n.list-container {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n}\n\n.list-container input {\n    display: inline-block;\n}\n\nul {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  padding:0;\n  position: absolute;\n  bottom: 0;\n  top: 30px;\n  right: 0;\n  left: 0;\n  display: flex;\n  flex-wrap: wrap;\n  flex-grow: 1;\n}\n\nli, .empty-item {\n  box-sizing: border-box;\n  margin: 5px;\n  padding: 10px;\n  border-radius: 5px;\n  list-style: none;\n  background-color: white;\n  border: 1px solid lightgrey;\n  width: 32%;\n  min-width: 400px;\n}\n\nli:hover {\n  background-color:#f9f9f9;\n  border-color:#00BDE8;\n}\n\n.product-id {\n    color: firebrick;\n    font-weight: bold;\n    display: block;\n}\n.product-department {\n    display: block;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-title {\n    display: block;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n}\n.product-price {\n    display: block;\n}\n.product-discount {\n    display: block;\n}\n\n.empty-item {\n  background:#fff;\n  color:#ddd;\n  font-style:italic;\n  border:none;\n  text-align:center;\n  visibility:hidden;\n  opacity:0;\n}\n\n.empty .empty-item {\n  opacity:1;\n  visibility:visible;\n}",
     "output": "str",
     "x": 650,
-    "y": 120,
+    "y": 140,
     "wires": [
       [
         "280cbaf6.d65e7e"
@@ -1369,7 +1370,7 @@
     "template": "<html>\n<head>\n    <title>Supermarket Manager</title>\n    <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\">\n    <meta charset=\"utf-8\">\n    <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js\"></script>\n    <style>{{{payload.style}}}</style>\n    <script>{{{payload.script}}}</script>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <h1>Supermarket Manager</h1>\n    <div class=\"form-container\">\n        <div>\n            <form method=\"post\" action=\"/{{url}}\" ajax=\"true\">\n                <input type=\"text\" name=\"id\" placeholder=\"Product ID\">\n                <input type=\"number\" name=\"price\" placeholder=\"Price\" step=\"0.01\">\n                <input type=\"submit\" value=\"Submit\">\n            </form>\n        </div>\n        <div class=\"output-div\">\n            <span class=\"feedback-output\" id=\"result\"></span>\n        </div>\n    </div>\n    <div class=\"list-container\">\n        <input type=\"text\" id=\"search-text\" placeholder=\"Search product\" class=\"search-box\">\n        <div class=\"list-count\"></div>\n        <ul id=\"list\">\n            {{#products}}\n            <li class=\"in\">\n                <span class=\"product-id\">Id: {{index}}</span>\n                <span class=\"product-price\">Original Price: {{price.original}} {{price.currency}}</span>\n                <span class=\"product-discount\">Discount Price: {{price.discount}} {{price.currency}}</span>\n                <span class=\"product-department\">{{department}}</span>\n                <span class=\"product-title\">{{title}}</span>\n            </li>\n            {{/products}}\n        </ul>\n    </div>\n  </div>\n</body>\n</html>",
     "output": "str",
     "x": 650,
-    "y": 160,
+    "y": 180,
     "wires": [
       [
         "c4a8c423.4be0b8"
@@ -1383,7 +1384,7 @@
     "name": "",
     "pretty": false,
     "x": 590,
-    "y": 230,
+    "y": 250,
     "wires": [
       [
         "64e9973c.4d7fc"
@@ -1399,7 +1400,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 750,
-    "y": 230,
+    "y": 250,
     "wires": [
       [
         "7c89b293.a65094"
@@ -1416,7 +1417,7 @@
     "upload": false,
     "swaggerDoc": "",
     "x": 110,
-    "y": 230,
+    "y": 250,
     "wires": [
       [
         "ea2da5a4.10451",
@@ -1616,7 +1617,7 @@
     "z": "175c22d2.0ef64d",
     "name": "",
     "x": 300,
-    "y": 80,
+    "y": 100,
     "wires": [
       [
         "62cffaa8.98178c"
@@ -1660,7 +1661,7 @@
     "z": "175c22d2.0ef64d",
     "name": "",
     "x": 410,
-    "y": 230,
+    "y": 250,
     "wires": [
       [
         "94c4dfd0.1ae0d"
@@ -1715,7 +1716,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 490,
-    "y": 590,
+    "y": 570,
     "wires": [
       [
         "aec71f0f.0374b8"
@@ -1729,7 +1730,7 @@
     "name": "Products in carts management",
     "info": "",
     "x": 160,
-    "y": 450,
+    "y": 430,
     "wires": []
   },
   {
@@ -1741,7 +1742,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 510,
-    "y": 510,
+    "y": 490,
     "wires": [
       [
         "aec71f0f.0374b8"
@@ -1754,7 +1755,7 @@
     "z": "186b7a65.42ec46",
     "name": "",
     "x": 770,
-    "y": 550,
+    "y": 530,
     "wires": [
       [
         "b5b89516.618f9"
@@ -1770,7 +1771,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 280,
-    "y": 690,
+    "y": 670,
     "wires": [
       [
         "7e8abd80.f5bc94",
@@ -1787,7 +1788,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 680,
-    "y": 690,
+    "y": 670,
     "wires": [
       [
         "3fc731af.9c0726"
@@ -1800,7 +1801,7 @@
     "z": "186b7a65.42ec46",
     "name": "",
     "x": 880,
-    "y": 690,
+    "y": 670,
     "wires": [
       []
     ]
@@ -1814,7 +1815,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 200,
-    "y": 770,
+    "y": 750,
     "wires": [
       [
         "86d5aecf.400a58"
@@ -1837,7 +1838,7 @@
     "randomUnits": "seconds",
     "drop": false,
     "x": 280,
-    "y": 510,
+    "y": 490,
     "wires": [
       [
         "e5c047da.9b7fb8"
@@ -1957,7 +1958,7 @@
     "type": "subflow:9cddb094.21ea78",
     "z": "186b7a65.42ec46",
     "x": 100,
-    "y": 550,
+    "y": 530,
     "wires": [
       [
         "c3580646.196f4",
@@ -1972,7 +1973,7 @@
     "name": "Update prices",
     "info": "",
     "x": 100,
-    "y": 30,
+    "y": 50,
     "wires": []
   },
   {
@@ -1997,7 +1998,7 @@
     "type": "subflow:cc688324.604068",
     "z": "186b7a65.42ec46",
     "x": 450,
-    "y": 770,
+    "y": 750,
     "wires": [
       [
         "fdd81993.c4071"
@@ -2478,7 +2479,7 @@
     "z": "175c22d2.0ef64d",
     "name": "",
     "x": 470,
-    "y": 290,
+    "y": 310,
     "wires": [
       [
         "eacfd7f7.36eca8"
@@ -2490,11 +2491,11 @@
     "type": "function",
     "z": "175c22d2.0ef64d",
     "name": "create topic name and message",
-    "func": "var product = msg.payload;\nvar department = product['department']\nmsg.topic = 'clients/' + department;\n\nvar title = product['title'];\nvar newPrice = msg.updatedPrice.toFixed(2) + product['price']['currency'];\nmsg.payload = title + \" -> \" + newPrice;\nreturn msg;",
+    "func": "var product = msg.payload;\nvar department = product['department']\nmsg.topic = 'clients/' + department;\n\nvar title = product['title'];\nvar newPrice = msg.updatedPrice.toFixed(2) + product['price']['currency'];\nmsg.payload = `${new Date().toISOString()} - New price for ${title}: ${newPrice}`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 750,
-    "y": 290,
+    "y": 310,
     "wires": [
       [
         "8ad1213.e73f4e"
@@ -2511,7 +2512,7 @@
     "retain": "",
     "broker": "6c5f366c.b6c0f8",
     "x": 960,
-    "y": 290,
+    "y": 310,
     "wires": []
   },
   {
@@ -2650,7 +2651,7 @@
     "outputs": 1,
     "noerr": 0,
     "x": 240,
-    "y": 290,
+    "y": 310,
     "wires": [
       [
         "8b235d9f.34bc08"
@@ -3386,7 +3387,7 @@
     "server": "bf734c7f.84529",
     "client": "",
     "x": 900,
-    "y": 770,
+    "y": 750,
     "wires": []
   },
   {
@@ -3398,10 +3399,39 @@
     "outputs": 1,
     "noerr": 0,
     "x": 700,
-    "y": 770,
+    "y": 750,
     "wires": [
       [
         "3ea6b894.f889d"
+      ]
+    ]
+  },
+  {
+    "id": "ba514842.ae2ef",
+    "type": "mqtt out",
+    "z": "11b01065.87c36",
+    "name": "publish availability",
+    "topic": "",
+    "qos": "1",
+    "retain": "true",
+    "broker": "6c5f366c.b6c0f8",
+    "x": 950,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "8e5c0c47.dcd078",
+    "type": "function",
+    "z": "11b01065.87c36",
+    "name": "Create topic",
+    "func": "var shelf = msg.deviceId.replace(\"_Temp\", \"\");\nmsg.topic = `supermarket/shelf/${shelf}/temperature`;\nmsg.payload = `${new Date().toISOString()} - Shelf temperature: ${msg.payload}`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 940,
+    "y": 230,
+    "wires": [
+      [
+        "ba514842.ae2ef"
       ]
     ]
   }
