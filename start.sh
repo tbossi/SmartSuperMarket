@@ -130,7 +130,8 @@ else
 	cd ..
 fi
 
-firefox -new-tab -url http://localhost:$HTTP_PORT/devices \
+firefox -new-tab -url http://localhost:$HTTP_PORT/ \
+    -new-tab -url http://localhost:$HTTP_PORT/devices \
 	-new-tab -url http://localhost:1880/ui \
 	-new-tab -url http://localhost:1880/
 

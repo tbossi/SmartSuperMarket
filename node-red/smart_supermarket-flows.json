@@ -2478,7 +2478,7 @@
     "type": "subflow:e5049f4c.fd313",
     "z": "175c22d2.0ef64d",
     "name": "",
-    "x": 470,
+    "x": 450,
     "y": 310,
     "wires": [
       [
@@ -2494,7 +2494,7 @@
     "func": "var product = msg.payload;\nvar department = product['department']\nmsg.topic = 'clients/' + department;\n\nvar title = product['title'];\nvar newPrice = msg.updatedPrice.toFixed(2) + product['price']['currency'];\nmsg.payload = `${new Date().toISOString()} - New price for ${title}: ${newPrice}`;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 750,
+    "x": 740,
     "y": 310,
     "wires": [
       [
@@ -2651,7 +2651,7 @@
     "func": "msg.updatedPrice = parseFloat(msg.payload.price);\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 240,
+    "x": 210,
     "y": 310,
     "wires": [
       [
@@ -3445,8 +3445,8 @@
     "ret": "txt",
     "url": "http://100.73.216.163:7778/",
     "tls": "",
-    "x": 1110,
-    "y": 380,
+    "x": 940,
+    "y": 370,
     "wires": [
       []
     ]
@@ -3458,8 +3458,8 @@
     "name": "",
     "algorithm": "AES",
     "key": "password",
-    "x": 940,
-    "y": 380,
+    "x": 780,
+    "y": 370,
     "wires": [
       [
         "b325e114.ee27b8"
