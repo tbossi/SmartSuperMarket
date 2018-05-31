@@ -133,12 +133,14 @@ Agli ingressi/uscite sono presenti dei totem antitaccheggio che rilevano
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Aggiungere use case diagram qui?
+È presente un iterfaccia per gli addetti marketing del supermercato grazie
+ alla quale sono in grado di abbassare o alzare i prezzi dei prodotti.
 \end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/UseCase.png
+	display false
 
 \end_inset
 
@@ -1367,12 +1369,9 @@ Cart_x_NFC
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Aggiungere class diagram
-\end_layout
+\begin_inset Graphics
+	filename diagram/Class Diagram.png
+	display false
 
 \end_inset
 
@@ -1945,8 +1944,28 @@ Scaffali
 Controllo della temperatura
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramChangeTemperature.png
+	display false
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Aggiunta e rimozione dei prodotti 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramShelvesManagement.png
+	display false
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1957,6 +1976,16 @@ Totem
 Rilevazione prodotti rubati
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramTheftProtection.png
+	display false
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Carrelli
 \end_layout
@@ -1965,8 +1994,38 @@ Carrelli
 Creazione mappa con la posizione dei carrelli
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdateCartChats.png
+	display false
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdateCartPosition.png
+	display false
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Aggiunta e rimozione dei prodotti
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramAddOrRemoveProductFromCart
+	display false
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1977,12 +2036,32 @@ Gestione dello schermo con la lista prodotti
 Gestione del pagamento
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramPay.png
+	display false
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Gestione prodotti
 \end_layout
 
 \begin_layout Subsection
 Form per l'aggiornamento dei prezzi
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdatePrice.png
+	display false
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2053,19 +2132,6 @@ Smarketbot
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Rimuovere se non fatto
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Per accedere al Smarketbot su telegram bisogna accedere al url 
 \begin_inset CommandInset href
 LatexCommand href
@@ -2088,6 +2154,19 @@ Quando il server è correttamente running allora dal bot sono possibili due
  dal bot e '/unsubscribe' con la quale è possibile smettere di ricevere
  informazioni dal bot.
  Tutti gli altri messaggi inviati al bot saranno ignorati.
+\end_layout
+
+\begin_layout Standard
+Il chatbot è stato sviluppato a parte per poter garantire un server sempre
+ attivo, il sorgente è disponibile al link 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/nicolalandro/BrodcastChatbot.git"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
