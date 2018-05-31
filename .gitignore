@@ -6,3 +6,4 @@ dataset/venv
 src/telegram_bot/token
 pre-commit
 manual_save_json
+src/npm-debug\.log
