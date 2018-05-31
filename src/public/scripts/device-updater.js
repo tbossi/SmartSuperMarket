@@ -18,7 +18,11 @@ function onSubmitButtonClick() {
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             let response = this.responseText;
-            $('#response').html("<p>" + response + "</p>");
+            var responseContainer = $('#response');
+            responseContainer.html("<p>" + response + "</p>");
+            setTimeout(function() {
+                responseContainer.empty();
+            }, 5000);
         }
     };
     xmlhttp.open("POST", "/devices/set");
