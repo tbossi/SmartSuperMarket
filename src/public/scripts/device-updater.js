@@ -10,10 +10,20 @@ $(document).ready(function () {
 
 function onSubmitButtonClick() {
     let selectedSensor = $('#sensors-selcet option:selected');
-    var sensorName = selectedSensor.val();
-    var TCPPort = selectedSensor.parent().attr('id');
-    var text = $('#set-value-input').val();
-    console.log('click: ' + text);
+    let sensorName = selectedSensor.val();
+    let array_id = selectedSensor.parent().attr('id');
+    let text_value = $('#set-value-input').val();
+
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let response = this.responseText;
+            $('#response').html("<p>" + response + "</p>");
+        }
+    };
+    xmlhttp.open("POST", "/devices/set");
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send(JSON.stringify({id: sensorName, devices_id: array_id, text: text_value}));
 }
 
 function onStatusChange(data) {

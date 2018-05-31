@@ -9,11 +9,12 @@ block content
         select(id='sensors-selcet')
             console.log(devices)
             each device in devices
-                optgroup(id= device.port + '')
+                optgroup(id= device.port.toString().split('').pop())
                     each sensor in device.sensors
                         option=sensor.id
         input(id='set-value-input')
         button(id='submit-button') Submit
+    div(id='response')
     h1= title
     div(class='devices-container')
         each device in devices
