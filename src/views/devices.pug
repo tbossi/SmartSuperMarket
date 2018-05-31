@@ -5,7 +5,7 @@ block append scripts
     script(src='/scripts/device-updater.js')
 
 block content
-    div
+    div(class='form')
         select(id='sensors-selcet')
             console.log(devices)
             each device in devices
