@@ -12,7 +12,7 @@ block content
                 optgroup(id= device.port.toString().split('').pop())
                     each sensor in device.sensors
                         option=sensor.id
-        input(id='set-value-input')
+        input(id='set-value-input', placeholder="Write value or x_value,y_value")
         button(id='submit-button') set value
     div(id='response')
     h1= title
