@@ -8,6 +8,7 @@
 \begin_preamble
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
+\usepackage[font=footnotesize,labelfont=bf]{caption}
 \end_preamble
 \options hidelinks
 \use_default_options true
@@ -80,7 +81,7 @@ logicalmkup
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "basicstyle={\ttfamily\small},keywordstyle={\color{BrickRed}\bfseries},stringstyle={\color{NavyBlue}},commentstyle={\color{OliveGreen}\itshape},morecomment={[s][\color{OliveGreen}]{/**}{*/}},numbers=left,numberstyle={\scriptsize\sffamily\color{Gray}},stepnumber=1,numbersep=8pt,tabsize=4,showspaces=false,showstringspaces=false,breaklines=true,frame=Single"
+\listings_params "basicstyle={\ttfamily\small},keywordstyle={\color{BrickRed}\bfseries},stringstyle={\color{NavyBlue}},commentstyle={\color{OliveGreen}\itshape},morecomment={[s][\color{OliveGreen}]{/**}{*/}},numbers=left,numberstyle={\scriptsize\sffamily\color{Gray}},stepnumber=1,numbersep=8pt,tabsize=4,showspaces=false,showstringspaces=false,breaklines=true,frame=Single,xleftmargin=14pt"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -110,6 +111,45 @@ io si un supermercato.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Wrap figure
+lines 22
+placement O
+overhang 0in
+width "50text%"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagram/UseCase.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Use case diagram.
+ Vengono indicate le azioni che possono svolgere i clienti del supermercato
+ e le azioni svolte dall'applicazione di controllo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Gli scaffali sono dotati di lettori per rilevare la presenza dei prodotti
  (ciascuno dotato di un tag RFID), identificando quando uno specifico prodotto
  viene prelevato o riposto.
@@ -133,19 +173,8 @@ Agli ingressi/uscite sono presenti dei totem antitaccheggio che rilevano
 \end_layout
 
 \begin_layout Standard
-È presente un iterfaccia per gli addetti marketing del supermercato grazie
+È presente un interfaccia per gli addetti marketing del supermercato grazie
  alla quale sono in grado di abbassare o alzare i prezzi dei prodotti.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename diagram/UseCase.png
-	display false
-	scale 50
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -1370,10 +1399,34 @@ Cart_x_NFC
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/Class Diagram.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Class diagram
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2075,7 +2128,17 @@ La form per aggiornare i prezzi è una semplice interfaccia grafica pensata
 smarketbot
 \emph default
  firmata, che causa un brodcast a tutti gli iscritti al bot che hanno in
- precedenza scritto '/subscribe', come verrà spiegato nell'apposito capitolo.
+ precedenza scritto '/subscribe', come spiegato nella sezione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Smarketbot"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2154,6 +2217,13 @@ noprefix "false"
 
 \begin_layout Section
 Smarketbot
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Smarketbot"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

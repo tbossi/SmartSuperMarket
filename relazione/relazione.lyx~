@@ -8,6 +8,7 @@
 \begin_preamble
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
+\usepackage[font=footnotesize,labelfont=bf]{caption}
 \end_preamble
 \options hidelinks
 \use_default_options true
@@ -110,6 +111,45 @@ io si un supermercato.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Wrap figure
+lines 22
+placement O
+overhang 0in
+width "50text%"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagram/UseCase.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Use case diagram.
+ Vengono indicate le azioni che possono svolgere i clienti del supermercato
+ e le azioni svolte dall'applicazione di controllo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Gli scaffali sono dotati di lettori per rilevare la presenza dei prodotti
  (ciascuno dotato di un tag RFID), identificando quando uno specifico prodotto
  viene prelevato o riposto.
@@ -133,16 +173,8 @@ Agli ingressi/uscite sono presenti dei totem antitaccheggio che rilevano
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Aggiungere use case diagram qui?
-\end_layout
-
-\end_inset
-
-
+È presente un interfaccia per gli addetti marketing del supermercato grazie
+ alla quale sono in grado di abbassare o alzare i prezzi dei prodotti.
 \end_layout
 
 \begin_layout Section
@@ -1367,11 +1399,33 @@ Cart_x_NFC
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Aggiungere class diagram
+\align center
+\begin_inset Graphics
+	filename diagram/Class Diagram.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Class diagram
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1945,8 +1999,30 @@ Scaffali
 Controllo della temperatura
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramChangeTemperature.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Aggiunta e rimozione dei prodotti 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramShelvesManagement.png
+	display false
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1957,6 +2033,17 @@ Totem
 Rilevazione prodotti rubati
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramTheftProtection.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Carrelli
 \end_layout
@@ -1965,8 +2052,41 @@ Carrelli
 Creazione mappa con la posizione dei carrelli
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdateCartChats.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdateCartPosition.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Aggiunta e rimozione dei prodotti
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramAddOrRemoveProductFromCart
+	display false
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1977,12 +2097,67 @@ Gestione dello schermo con la lista prodotti
 Gestione del pagamento
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramPay.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Gestione prodotti
 \end_layout
 
 \begin_layout Subsection
 Form per l'aggiornamento dei prezzi
+\end_layout
+
+\begin_layout Standard
+La form per aggiornare i prezzi è una semplice interfaccia grafica pensata
+ per consentire al gruppo marketing del supermercato di aggiornare i prezzi
+ dei prodotti.
+ È possibile cercare nel listino i prodotti e poi inserendo id prodotto
+ e prezzo si potrà aggiornare con successo.
+ Questo scatena un messaggio MQTT a tutti i sottoscritti e anche una chiamata
+ al server del 
+\emph on
+smarketbot
+\emph default
+ firmata, che causa un brodcast a tutti gli iscritti al bot che hanno in
+ precedenza scritto '/subscribe', come spiegato nella sezione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Smarketbot"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdatePrice.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Subflows
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Part
@@ -2042,15 +2217,9 @@ noprefix "false"
 
 \begin_layout Section
 Smarketbot
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Rimuovere se non fatto
-\end_layout
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Smarketbot"
 
 \end_inset
 
@@ -2058,7 +2227,7 @@ Rimuovere se non fatto
 \end_layout
 
 \begin_layout Standard
-Per accedere al Smarketbot su telegram bisogna accedere al url 
+Per utilizzare lo Smarketbot su telegram bisogna accedere all'url 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://t.me/NicTomBot"
@@ -2067,19 +2236,50 @@ literal "false"
 \end_inset
 
  dal proprio dispositivo con installato Telegram.
- Per iniziare ad utilizzarlo veramente è necessario anche eseguire il server:
- prima però è necessario creare il file /src/telegram_bot/tocken con all'interno
- il token delle api di telegram (questo step è necessario perchè essendo
- il repository pubblico sarebbe un errore condividere il token).
  
 \end_layout
 
 \begin_layout Standard
-Quando il server è correttamente running allora dal bot sono possibili due
- azioni: '/subscribe' con la quale ci si sottoscrive per ottenere informazioni
- dal bot e '/unsubscribe' con la quale è possibile smettere di ricevere
- informazioni dal bot.
+Dal bot sono possibili due azioni: '/subscribe' con la quale ci si sottoscrive
+ per ottenere informazioni dal bot e '/unsubscribe' con la quale è possibile
+ smettere di ricevere informazioni dal bot.
  Tutti gli altri messaggi inviati al bot saranno ignorati.
+\end_layout
+
+\begin_layout Standard
+Il chatbot è stato sviluppato a parte per poter garantire un server sempre
+ attivo, il sorgente è disponibile al link 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/nicolalandro/BrodcastChatbot.git"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Il server sempre attivo sul quale è installato è un Orange Pi PC 2
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.orangepi.org/orangepipc2/"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+, con sistema operativo Armbian, questo è stato possibile grazie alla compatibil
+ità di node.js con l'architettura ARM.
 \end_layout
 
 \begin_layout Section
