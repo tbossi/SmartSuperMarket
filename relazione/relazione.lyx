@@ -2064,7 +2064,18 @@ Form per l'aggiornamento dei prezzi
 \end_layout
 
 \begin_layout Standard
-
+La form per aggiornare i prezzi è una semplice interfaccia grafica pensata
+ per consentire al gruppo marketing del supermercato di aggiornare i prezzi
+ dei prodotti.
+ È possibile cercare nel listino i prodotti e poi inserendo id prodotto
+ e prezzo si potrà aggiornare con successo.
+ Questo scatena un messaggio MQTT a tutti i sottoscritti e anche una chiamata
+ al server del 
+\emph on
+smarketbot
+\emph default
+ firmata, che causa un brodcast a tutti gli iscritti al bot che hanno in
+ precedenza scritto '/subscribe', come verrà spiegato nell'apposito capitolo.
 \end_layout
 
 \begin_layout Standard
