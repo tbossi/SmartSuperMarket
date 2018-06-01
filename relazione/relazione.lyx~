@@ -81,7 +81,7 @@ logicalmkup
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "basicstyle={\ttfamily\small},keywordstyle={\color{BrickRed}\bfseries},stringstyle={\color{NavyBlue}},commentstyle={\color{OliveGreen}\itshape},morecomment={[s][\color{OliveGreen}]{/**}{*/}},numbers=left,numberstyle={\scriptsize\sffamily\color{Gray}},stepnumber=1,numbersep=8pt,tabsize=4,showspaces=false,showstringspaces=false,breaklines=true,frame=Single"
+\listings_params "basicstyle={\ttfamily\small},keywordstyle={\color{BrickRed}\bfseries},stringstyle={\color{NavyBlue}},commentstyle={\color{OliveGreen}\itshape},morecomment={[s][\color{OliveGreen}]{/**}{*/}},numbers=left,numberstyle={\scriptsize\sffamily\color{Gray}},stepnumber=1,numbersep=8pt,tabsize=4,showspaces=false,showstringspaces=false,breaklines=true,frame=Single,xleftmargin=14pt"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -1420,7 +1420,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Class diagram
+Class diagram.
 \end_layout
 
 \end_inset
@@ -1915,6 +1915,13 @@ Allo scopo di semplificare la simulazione, il server ha un comportamento
 
 \begin_layout Subsection
 MQTT
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:MQTT"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2000,6 +2007,42 @@ Controllo della temperatura
 \end_layout
 
 \begin_layout Standard
+Il flusso per il controllo della temperatura si occupa di mantenere la temperatu
+ra del banco frigo S1 stabile sui 2°C.
+ I cambiamenti di temperatura vengono indicati nel grafico presente nella
+ dashboard e pubblicati sul topic 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/shelf/S1/temperature
+\end_layout
+
+\end_inset
+
+ (vedi sezione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:MQTT"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramChangeTemperature.png
 	display false
@@ -2010,15 +2053,83 @@ Controllo della temperatura
 
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sequence diagram inerente alla gestione della temperatura.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
-Aggiunta e rimozione dei prodotti 
+Aggiunta e rimozione dei prodotti
 \end_layout
 
 \begin_layout Standard
+Il flusso che controlla l'aggiunta e la rimozione di prodotti dagli scaffali
+ si occupa di aggiornare la disponibilità dei prodotti sul database e di
+ pubblicare la nuova quantità disponibile sul topic 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/pro duct/<Pid>/availability/<Sx>
+\end_layout
+
+\end_inset
+
+ (vedi sezione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:MQTT"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramShelvesManagement.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sequence diagram inerente all'aggiunta e rimozione dei prodotti dagli scaffali.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2034,10 +2145,35 @@ Rilevazione prodotti rubati
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramTheftProtection.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2053,6 +2189,14 @@ Creazione mappa con la posizione dei carrelli
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdateCartChats.png
 	display false
@@ -2063,11 +2207,29 @@ Creazione mappa con la posizione dei carrelli
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdateCartPosition.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2079,10 +2241,35 @@ Aggiunta e rimozione dei prodotti
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramAddOrRemoveProductFromCart
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2098,10 +2285,35 @@ Gestione del pagamento
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramPay.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2142,10 +2354,35 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename diagram/SequenceDiagramUpdatePrice.png
 	display false
 	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sequence diagram inerente all'aggiornamento dei prezzi.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
