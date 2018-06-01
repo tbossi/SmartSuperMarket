@@ -192,7 +192,7 @@ name "sec:Entità-coinvolte"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1985,19 +1985,6 @@ supermarket/product/<Pid>/availability/<Sx>
 Flussi realizzati
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Aggiungere i vari activity diagram
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Scaffali
 \end_layout
@@ -2145,6 +2132,32 @@ Rilevazione prodotti rubati
 \end_layout
 
 \begin_layout Standard
+Quando un prodotto non pagato viene rilevato dai totem antitaccheggio viene
+ azionato un allarme per 5 secondi e viene pubblicata l'informazione sul
+ topic 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+supermarket/alert/<Tx>
+\end_layout
+
+\end_inset
+
+ (vedi sezione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:MQTT"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement h
 wide false
@@ -2167,7 +2180,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
+Sequence diagram inerente alla gestione dei tentativi di furto.
 \end_layout
 
 \end_inset
@@ -2185,7 +2198,14 @@ Carrelli
 \end_layout
 
 \begin_layout Subsection
-Creazione mappa con la posizione dei carrelli
+Spostamenti casuali dei carrelli
+\end_layout
+
+\begin_layout Standard
+Questo flusso di supporto serve a rendere più evidente il funzionamento
+ della mappa con i carrelli.
+ Questo flusso si occupa di spostare casualmente i carrelli all'interno
+ del supermercato.
 \end_layout
 
 \begin_layout Standard
@@ -2194,18 +2214,6 @@ placement h
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename diagram/SequenceDiagramUpdateCartChats.png
-	display false
-	scale 50
-
-\end_inset
-
-
-\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -2223,7 +2231,53 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+Sequence diagram inerente allo spostamento casuale dei carrelli.
+\end_layout
 
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Creazione mappa con la posizione dei carrelli
+\end_layout
+
+\begin_layout Standard
+Questo flusso si occupa di richiedere la posizione dei carrelli e la disposizion
+e degli scaffali per poter generare e mantenere aggiornata la mappa dei
+ carrelli e la heatmap che mostra le zone più frequentate del supermercato.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagram/SequenceDiagramUpdateCartsCharts.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sequence diagram inerente alla generazione della mappa dei carrelli.
 \end_layout
 
 \end_inset
@@ -2238,6 +2292,12 @@ status open
 
 \begin_layout Subsection
 Aggiunta e rimozione dei prodotti
+\end_layout
+
+\begin_layout Standard
+Il flusso che controlla l'aggiunta e la rimozione di prodotti dai carrelli
+ si occupa di aggiornare la lista dei prodotti prelevati sul database e
+ di aggiornare lo schermo del carrello che mostra tale lista.
 \end_layout
 
 \begin_layout Standard
@@ -2263,7 +2323,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
+Sequence diagram inerente all'aggiunta e rimozione dei prodotti dai carrelli.
 \end_layout
 
 \end_inset
@@ -2280,8 +2340,34 @@ status open
 Gestione dello schermo con la lista prodotti
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+To do
+\end_layout
+
+\end_inset
+
+TODO
+\end_layout
+
 \begin_layout Subsection
 Gestione del pagamento
+\end_layout
+
+\begin_layout Standard
+Per poter effettuare un pagamento è necessario aver inserito almeno un prodotto
+ nel carrello.
+ Selezionando il bottone di pagamento sull'interfaccia del carrello, viene
+ attivato il lettore NFC per poter effettuare la transazione.
+ La transazione viene mandata al server di pagamento quindi il risultato
+ dell'operazione viene mostrato a video.
+\end_layout
+
+\begin_layout Standard
+I messaggi con il server sono cifrati con AES.
 \end_layout
 
 \begin_layout Standard
@@ -2307,7 +2393,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
+Sequence diagram inerente alla gestione del pagamento tramite NFC dal carrello.
 \end_layout
 
 \end_inset
@@ -2340,7 +2426,17 @@ La form per aggiornare i prezzi è una semplice interfaccia grafica pensata
 smarketbot
 \emph default
  firmata, che causa un brodcast a tutti gli iscritti al bot che hanno in
- precedenza scritto '/subscribe', come spiegato nella sezione 
+ precedenza scritto 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+/subscribe
+\end_layout
+
+\end_inset
+
+, come spiegato nella sezione 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Smarketbot"
@@ -2391,6 +2487,19 @@ Sequence diagram inerente all'aggiornamento dei prezzi.
 
 \begin_layout Section
 Subflows
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+To do???
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2477,9 +2586,27 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Dal bot sono possibili due azioni: '/subscribe' con la quale ci si sottoscrive
- per ottenere informazioni dal bot e '/unsubscribe' con la quale è possibile
- smettere di ricevere informazioni dal bot.
+Dal bot sono possibili due azioni: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+/subscribe
+\end_layout
+
+\end_inset
+
+ con la quale ci si sottoscrive per ottenere informazioni dal bot e 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+/unsubscribe
+\end_layout
+
+\end_inset
+
+ con la quale è possibile smettere di ricevere informazioni dal bot.
  Tutti gli altri messaggi inviati al bot saranno ignorati.
 \end_layout
 
