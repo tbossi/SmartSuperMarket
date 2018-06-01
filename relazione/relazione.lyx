@@ -2157,7 +2157,7 @@ Smarketbot
 \end_layout
 
 \begin_layout Standard
-Per accedere al Smarketbot su telegram bisogna accedere al url 
+Per utilizzare lo Smarketbot su telegram bisogna accedere all'url 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://t.me/NicTomBot"
@@ -2178,9 +2178,7 @@ Dal bot sono possibili due azioni: '/subscribe' con la quale ci si sottoscrive
 
 \begin_layout Standard
 Il chatbot è stato sviluppato a parte per poter garantire un server sempre
- attivo (in particolare è stato installato in un Orange Pi PC 2, questo
- è stato possinile grazie alla compatibilità di node su architettura ARM),
- il sorgente è disponibile al link 
+ attivo, il sorgente è disponibile al link 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/nicolalandro/BrodcastChatbot.git"
@@ -2190,6 +2188,28 @@ literal "false"
 
 .
  
+\end_layout
+
+\begin_layout Standard
+Il server sempre attivo sul quale è installato è un Orange Pi PC 2
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.orangepi.org/orangepipc2/"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+, con sistema operativo Armbian, questo è stato possibile grazie alla compatibil
+ità di node.js con l'architettura ARM.
 \end_layout
 
 \begin_layout Section
