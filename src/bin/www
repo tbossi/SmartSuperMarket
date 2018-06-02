@@ -9,8 +9,6 @@ const digitalDevice = require('../devices/digital-device');
 const analogicalDevice = require('../devices/analogical-device');
 const positionDevice = require('../devices/position-device');
 const smartSupermarket = require('../smart-supermarket');
-// const smarketbot = require('../telegram_bot/telegram_bot');
-
 
 class serverContainer {
     constructor(...servers) {
@@ -44,7 +42,6 @@ for (let i = 1; i <= 2; i++) {
 }
 
 const smartSupermarketApp = new smartSupermarket(shelves, shoppingCarts, theftProtection);
-// const bot = new smarketbot('../telegram_bot/token');
 
 new serverContainer(
     new httpServer(process.env.PORT || '3000', smartSupermarketApp),
