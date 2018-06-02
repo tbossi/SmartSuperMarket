@@ -2340,63 +2340,6 @@ Sequence diagram inerente all'aggiunta e rimozione dei prodotti dai carrelli.
 Gestione dello schermo con la lista prodotti
 \end_layout
 
-\begin_layout Standard
-Per rendere più facili e comprensibili i flow e per mettere a fattor comune
- parti di flow utilizzati in più punti, abbiamo utilizzato alcuni subflow.
- 
-\end_layout
-
-\begin_layout Subsubsection
-TCP Set e Get
-\end_layout
-
-\begin_layout Standard
-Sono due flussi utilizzati per cambiare o ottenere i valori dei vari sensori.
- In questi flussi è racchiusa la logica di quali delle tre connesioni TCP
- utilizzare e di comporre la richiesta.
- In caso di errore questo viene stampato nei log di debug.
-\end_layout
-
-\begin_layout Subsubsection
-TCP fake payment
-\end_layout
-
-\begin_layout Standard
-Che è in grado di simulare il pagamento criptando i dati e inviandoli al
- server, poi decriptare la risposta e gestirla per informare l'utilizzatore
- del risultato della transazione.
-\end_layout
-
-\begin_layout Subsubsection
-Query Mongo
-\end_layout
-
-\begin_layout Standard
-Sono stati realizzati otto subflow che utilizzano mongodb, eseguono le seguenti
- azioni: ottenere la lista di tutti i prodotti del supermercato o dei carrelli
- oppure la mappa delsupermarket con i valori di frequenza; aggiornare la
- disponibilità dei prodotti o il loro prezzo oppure cambiare i prodotti
- presenti in un carrello.
- 
-\end_layout
-
-\begin_layout Subsubsection
-Every 250 ms
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-To do
-\end_layout
-
-\end_inset
-
-TODO
-\end_layout
-
 \begin_layout Subsection
 Gestione del pagamento
 \end_layout
@@ -2534,16 +2477,60 @@ Subflows
 \end_layout
 
 \begin_layout Standard
+Per rendere più facili e comprensibili i flow e per mettere a fattor comune
+ parti di flow utilizzati in più punti, abbiamo utilizzato alcuni subflow.
+ 
+\end_layout
+
+\begin_layout Subsection
+TCP Set e Get
+\end_layout
+
+\begin_layout Standard
+Sono due flussi utilizzati per cambiare o ottenere i valori dei vari sensori.
+ In questi flussi è racchiusa la logica di quali delle tre connesioni TCP
+ utilizzare e di comporre la richiesta.
+ In caso di errore questo viene stampato nei log di debug.
+\end_layout
+
+\begin_layout Subsection
+TCP fake payment
+\end_layout
+
+\begin_layout Standard
+Che è in grado di simulare il pagamento criptando i dati e inviandoli al
+ server, poi decriptare la risposta e gestirla per informare l'utilizzatore
+ del risultato della transazione.
+\end_layout
+
+\begin_layout Subsection
+Query Mongo
+\end_layout
+
+\begin_layout Standard
+Sono stati realizzati otto subflow che utilizzano mongodb, eseguono le seguenti
+ azioni: ottenere la lista di tutti i prodotti del supermercato o dei carrelli
+ oppure la mappa delsupermarket con i valori di frequenza; aggiornare la
+ disponibilità dei prodotti o il loro prezzo oppure cambiare i prodotti
+ presenti in un carrello.
+ 
+\end_layout
+
+\begin_layout Subsection
+Every 250 ms
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-To do???
+To do
 \end_layout
 
 \end_inset
 
-???
+TODO
 \end_layout
 
 \begin_layout Standard
