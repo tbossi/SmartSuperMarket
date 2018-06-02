@@ -19,6 +19,7 @@
 \use_default_options true
 \begin_modules
 logicalmkup
+multicol
 \end_modules
 \maintain_unincluded_children false
 \language italian
@@ -2358,8 +2359,6 @@ Sequence diagram inerente all'aggiunta e rimozione dei prodotti dai carrelli.
 Gestione dello schermo con la lista prodotti
 \end_layout
 
-<<<<<<< HEAD
-=======
 \begin_layout Standard
 Ogni carrello è dotato di uno schermo che mostra la lista dei prodotti inseriti
  con i relativi prezzi.
@@ -2403,7 +2402,6 @@ Sequence diagram inerente alla gestione dello schermo del carrello.
 
 \end_layout
 
->>>>>>> pagamento
 \begin_layout Subsection
 Gestione del pagamento
 \end_layout
@@ -2474,7 +2472,7 @@ La form per aggiornare i prezzi è una semplice interfaccia grafica pensata
  Questo scatena un messaggio MQTT a tutti i sottoscritti e anche una chiamata
  al server del 
 \emph on
-smarketbot
+Smarketbot
 \emph default
  firmata, che causa un brodcast a tutti gli iscritti al bot che hanno in
  precedenza scritto 
@@ -2542,63 +2540,51 @@ Subflows
 
 \begin_layout Standard
 Per rendere più facili e comprensibili i flow e per mettere a fattor comune
- parti di flow utilizzati in più punti, abbiamo utilizzato alcuni subflow.
+ parti di flow utilizzati in più punti, abbiamo creato alcuni subflow.
  
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 TCP Set e Get
 \end_layout
 
 \begin_layout Standard
 Sono due flussi utilizzati per cambiare o ottenere i valori dei vari sensori.
- In questi flussi è racchiusa la logica di quali delle tre connesioni TCP
- utilizzare e di comporre la richiesta.
- In caso di errore questo viene stampato nei log di debug.
+ In questi flussi è racchiusa la logica per decidere quale delle tre connesioni
+ TCP utilizzare e per comporre la richiesta.
+ In caso si verifichi un errore, questo viene stampato nei log di debug.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 TCP fake payment
 \end_layout
 
 \begin_layout Standard
-Che è in grado di simulare il pagamento criptando i dati e inviandoli al
- server, poi decriptare la risposta e gestirla per informare l'utilizzatore
- del risultato della transazione.
+Questo flusso è in grado di simulare il meccanismo di pagamento criptando
+ i dati e inviandoli al server per poi decriptare la risposta e gestirla
+ per informare l'utilizzatore del risultato della transazione.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Query Mongo
 \end_layout
 
 \begin_layout Standard
-Sono stati realizzati otto subflow che utilizzano mongodb, eseguono le seguenti
- azioni: ottenere la lista di tutti i prodotti del supermercato o dei carrelli
- oppure la mappa delsupermarket con i valori di frequenza; aggiornare la
- disponibilità dei prodotti o il loro prezzo oppure cambiare i prodotti
- presenti in un carrello.
- 
+Sono stati realizzati vari subflow che utilizzano MongoDB ed eseguono le
+ seguenti azioni: ottenere la lista di tutti i prodotti del supermercato
+ o dei carrelli, ottenere la mappa del supermarket; aggiornare la disponibilità
+ dei prodotti o il loro prezzo e cambiare i prodotti presenti in un carrello.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Every 250 ms
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-To do
-\end_layout
-
-\end_inset
-
-<<<<<<< HEAD
-TODO
-=======
-???
->>>>>>> pagamento
+Questo è un piccolo subflow di supporto che è stato utilizzato in più punti
+ per velocizzare la simulazione.
+ Ogni secondo genera un evento che viene mandato a vari nodi delay allo
+ scopo di produrre quattro eventi distanziati di 250 millisecondi.
 \end_layout
 
 \begin_layout Standard
@@ -2828,10 +2814,19 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex Multiple Columns
+status open
+
+\begin_layout Plain Layout
 \begin_inset CommandInset include
 LatexCommand lstinputlisting
 filename "resources/sitemap_il_gigante.json"
 lstparams "language=Java"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
