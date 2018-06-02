@@ -104,6 +104,7 @@ if [ "$DOCKER" == true ]; then
 else
 	cd $SRC_DIR
 	npm install
+	npm rebuild node-sass
 	cd ..
 fi
 
@@ -126,7 +127,7 @@ if [ "$DOCKER" == true ]; then
 		-d --rm -t $APP_NAME
 else
 	cd $SRC_DIR
-	npm start
+	npm start &
 	cd ..
 fi
 
