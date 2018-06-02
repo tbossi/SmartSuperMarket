@@ -73,7 +73,7 @@ if [ "$DOCKER" == true ]; then
 		alert "Downloading Docker (this can take some time...)"
 		mkdir temp
 		cd temp
-		wget https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
+		wget --no-check-certificate https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
 	
 		alert "Installing Docker"
 		tar xzvf docker-17.04.0-ce.tgz
