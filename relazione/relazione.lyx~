@@ -9,8 +9,13 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
 \usepackage[font=footnotesize,labelfont=bf]{caption}
+\hypersetup{
+    allcolors = {Black},
+    urlcolor = {RoyalBlue},
+    linkcolor = {Sepia},
+    menucolor = {Sepia}
+}
 \end_preamble
-\options hidelinks
 \use_default_options true
 \begin_modules
 logicalmkup
@@ -39,8 +44,21 @@ logicalmkup
 \index_command default
 \paperfontsize 12
 \spacing other 1.15
-\use_hyperref false
-\papersize default
+\use_hyperref true
+\pdf_title "Smart Super Market"
+\pdf_author "Bossi Tommaso, Landro Nicola"
+\pdf_subject "Progetto per il corso di Sistemi di Telecomunicazione Innovativi"
+\pdf_keywords "Sistemi di Telecomunicazione Innovativi, IoT, NFC, Market"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
 \use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
@@ -112,7 +130,7 @@ io si un supermercato.
 
 \begin_layout Standard
 \begin_inset Wrap figure
-lines 22
+lines 23
 placement O
 overhang 0in
 width "50text%"
@@ -2340,6 +2358,52 @@ Sequence diagram inerente all'aggiunta e rimozione dei prodotti dai carrelli.
 Gestione dello schermo con la lista prodotti
 \end_layout
 
+<<<<<<< HEAD
+=======
+\begin_layout Standard
+Ogni carrello è dotato di uno schermo che mostra la lista dei prodotti inseriti
+ con i relativi prezzi.
+ Ogni volta che viene aggiunto un prodotto al carrello (o rimosso) le informazio
+ni sullo schermo vengono aggiornate.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diagram/SequenceDiagramCartScreen.png
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sequence diagram inerente alla gestione dello schermo del carrello.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+>>>>>>> pagamento
 \begin_layout Subsection
 Gestione del pagamento
 \end_layout
@@ -2530,7 +2594,11 @@ To do
 
 \end_inset
 
+<<<<<<< HEAD
 TODO
+=======
+???
+>>>>>>> pagamento
 \end_layout
 
 \begin_layout Standard
@@ -2604,7 +2672,32 @@ name "sec:Smarketbot"
 \end_layout
 
 \begin_layout Standard
-Per utilizzare lo Smarketbot su telegram bisogna accedere all'url 
+In aggiunta alle notifiche sull'aggiornamento dei prezzi tramite MQTT si
+ è deciso di sviluppare Smarketbot, un semplice bot per Telegram
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "https://telegram.org/"
+target "https://telegram.org/"
+literal "false"
+
+\end_inset
+
+, è disponibile l'app per Android e iOS, l'applicazione per PC e anche una
+ web app.
+\end_layout
+
+\end_inset
+
+ in grado di notificare la medesima informazione a chiunque abbia l'applicazione
+ installata.
+\end_layout
+
+\begin_layout Standard
+Per utilizzare Smarketbot su Telegram bisogna accedere alla url 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://t.me/NicTomBot"
@@ -2613,11 +2706,10 @@ literal "false"
 \end_inset
 
  dal proprio dispositivo con installato Telegram.
- 
+ Dal bot sono possibili due azioni:
 \end_layout
 
-\begin_layout Standard
-Dal bot sono possibili due azioni: 
+\begin_layout Itemize
 \begin_inset Flex Code
 status open
 
@@ -2627,7 +2719,10 @@ status open
 
 \end_inset
 
- con la quale ci si sottoscrive per ottenere informazioni dal bot e 
+ con la quale ci si sottoscrive per ottenere informazioni dal bot;
+\end_layout
+
+\begin_layout Itemize
 \begin_inset Flex Code
 status open
 
@@ -2642,21 +2737,9 @@ status open
 \end_layout
 
 \begin_layout Standard
-Il chatbot è stato sviluppato a parte per poter garantire un server sempre
- attivo, il sorgente è disponibile al link 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://github.com/nicolalandro/BrodcastChatbot.git"
-literal "false"
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-Il server sempre attivo sul quale è installato è un Orange Pi PC 2
+Il bot è stato sviluppato e installato a parte per poter garantire un server
+ sempre attivo.
+ Tale server è un Orange Pi PC 2
 \begin_inset Foot
 status open
 
@@ -2675,6 +2758,33 @@ literal "false"
 
 , con sistema operativo Armbian, questo è stato possibile grazie alla compatibil
 ità di node.js con l'architettura ARM.
+\end_layout
+
+\begin_layout Standard
+Anche il bot è sviluppato in node.js ed il codice sorgente è disponibile
+ al link 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/nicolalandro/BrodcastChatbot.git"
+literal "false"
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Section
